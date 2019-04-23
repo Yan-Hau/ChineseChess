@@ -6,7 +6,7 @@ Chinese Chess 中國象棋 簡易說明
 Class : ConsoleInterface (基於Windows.h)
 ---
 
-```cpp=
+```cpp
 Feature: Guess the word
 
   # Define Static Function:
@@ -59,7 +59,7 @@ Feature: Guess the word
 
 Sample Code
 ---
-```cpp=
+```cpp
 #include "pch.h"
 #include "ConsoleInterface.h"
 using namespace std;
