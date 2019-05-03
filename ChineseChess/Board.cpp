@@ -3,14 +3,7 @@
 
 Board::Board()
 {
-	this->state = {
-		{"＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝"},
-		{"｜步　　數　｜　紅　　方　｜　黑　　方｜"},
-		{"｜1.        ｜  炮二平五  ｜  馬８進７｜"},
-		{"｜2.        ｜  傌二進三  ｜　炮８平９｜"},
-		{"｜3.        ｜  傌八進七　｜　車９平８｜"},
-	};
-	/* Table Size = 10 x 10 -> 21 x 17 */
+	/* Table Size = 10 x 10 -> 21 x 17 (Height x Width) */
 	this->base = {
 		{"１" ,"  " ,"２" ,"  " ,"３" ,"  " ,"４" ,"  " ,"５" ,"  " ,"６" ,"  " ,"７" ,"  " ,"８" ,"  " ,"９" },
 		{"╔ ","═ ","╦ ","═ ","╦ ","═ ","╦ ","═ ","╦ ","═ ","╦ ","═ ","╦ ","═ ","╦ ","═ ","╗ "},
@@ -34,6 +27,22 @@ Board::Board()
 		{"╚ ","═ ","╩ ","═ ","╩ ","═ ","╩ ","═ ","╩ ","═ ","╩ ","═ ","╩ ","═ ","╩ ","═ ","╝ "},
 		{"一" ,"  " ,"二" ,"  " ,"三" ,"  " ,"四" ,"  " ,"五" ,"  " ,"六" ,"  " ,"七" ,"  " ,"八" ,"  " ,"九" },
 	};
+
+	this->cursor = {
+		{{3,3 } , {7,3 } , {11,3 } , {15,3 } , {19,3 } , {23,3 } , {27,3 } , {31,3 } , {35,3 }},
+		{{3,5 } , {7,5 } , {11,5 } , {15,5 } , {19,5 } , {23,5 } , {27,5 } , {31,5 } , {35,5 }},
+		{{3,7 } , {7,7 } , {11,7 } , {15,7 } , {19,7 } , {23,7 } , {27,7 } , {31,7 } , {35,7 }},
+		{{3,9 } , {7,9 } , {11,9 } , {15,9 } , {19,9 } , {23,9 } , {27,9 } , {31,9 } , {35,9 }},
+		{{3,11} , {7,11} , {11,11} , {15,11} , {19,11} , {23,11} , {27,11} , {31,11} , {35,11}},
+		{{3,13} , {7,13} , {11,13} , {15,13} , {19,13} , {23,13} , {27,13} , {31,13} , {35,13}},
+		{{3,15} , {7,15} , {11,15} , {15,15} , {19,15} , {23,15} , {27,15} , {31,15} , {35,15}},
+		{{3,17} , {7,17} , {11,17} , {15,17} , {19,17} , {23,17} , {27,17} , {31,17} , {35,17}},
+		{{3,19} , {7,19} , {11,19} , {15,19} , {19,19} , {23,19} , {27,19} , {31,19} , {35,19}},
+		{{3,21} , {7,21} , {11,21} , {15,21} , {19,21} , {23,21} , {27,21} , {31,21} , {35,21}},
+	};
+
+	this->pointerX = 0;
+	this->pointerY = 0;
 }
 
 
@@ -43,14 +52,31 @@ Board::~Board()
 
 void Board::print()
 {
+	Cmder::setCursor(3, 2);
+	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_CYAN);
+	COORD pos = Cmder::getCursor();
 	for (auto& row : this->base)
 	{
+		
 		for (auto& element : row)
 		{
 			cout << element;
 		}
-		cout << '\n';
+		Cmder::setCursor(pos.X, ++pos.Y);
 	}
+	/* 黑色方 */
+	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_WHITE);
+	Cmder::setCursor(3, 2);
+	for (auto& element : this->base[0])
+		cout << element;
+
+	/* 紅色方 */
+	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_RED);
+	Cmder::setCursor(3, 22);
+	for(auto& element : this->base[20])
+		cout << element;
+	
+	Cmder::setCursor(4, 21);
 }
 
 
@@ -61,4 +87,15 @@ void Board::put(Position pos)
 void Board::put(int x, int y)
 {
 
+}
+
+void Board::setPointer(int dx , int dy)
+{
+	this->pointerX = (this->pointerX + dx) % 9;
+	this->pointerY = (this->pointerY + dy) % 10;
+}
+
+COORD Board::getPointer()
+{
+	return { this->cursor[this->pointerY][this->pointerX] };
 }
