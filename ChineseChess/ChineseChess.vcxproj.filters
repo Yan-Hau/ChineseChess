@@ -21,6 +21,18 @@
     <ClInclude Include="ConsoleInterface.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Board.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Manager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Point.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Chess.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -30,6 +42,15 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleInterface.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Board.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Manager.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\test.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

@@ -151,10 +151,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Board.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Chess.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Manager.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Point.h" />
     <ClInclude Include="ConsoleInterface.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Board.cpp" />
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Manager.cpp" />
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\test.cpp" />
     <ClCompile Include="ChineseChess.cpp" />
     <ClCompile Include="ConsoleInterface.cpp" />
     <ClCompile Include="pch.cpp">
