@@ -152,12 +152,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Board.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Chess.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Manager.h" />
+    <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Point.h" />
     <ClInclude Include="ConsoleInterface.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Board.cpp" />
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Manager.cpp" />
+    <ClCompile Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\test.cpp" />
+    <ClCompile Include="ChineseChess.cpp" />
     <ClCompile Include="ConsoleInterface.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
