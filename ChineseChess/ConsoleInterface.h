@@ -29,7 +29,7 @@ typedef struct {
 	WORD color;
 } Flag;
 
-class ConsoleInterface
+class Cmder
 {
 private:
 	HANDLE handle;
@@ -37,17 +37,19 @@ private:
 
 	// Set Console Attribute
 public:
-	ConsoleInterface(HANDLE);
-	ConsoleInterface();
-	~ConsoleInterface();
+	Cmder(HANDLE);
+	Cmder();
+	~Cmder();
 	Flag flag;
 	unsigned short originColor();
-	static const HANDLE Instance;		  /* Stand Output stream*/
+
+	static const HANDLE Instance;			  /* Stand Output stream*/
 	static COORD setCursor(short x, short y); /* Set cursor position */
+	static COORD setCursor(COORD);        /* Set cursor position */
 	static COORD getCursor();			  /* Get Now cursor position */
 	static unsigned short getColor();     /* Get Now using Color*/
-	static bool setColor(unsigned short color = 7); /* Set Background color , fonr color*/
-	static bool setColor(Flag flag); /* Set Background color , fonr color*/
+	static bool setColor(WORD color = 7);			  /* Set Background color , fonr color Use value  */
+	static bool setColor(Flag flag);	  /* Set Background color , fonr color Use struct */
 	static void initialize(int height = 40, int weight = 180); /* Set Command Box height & weight */
 
 
@@ -76,13 +78,13 @@ public:
 /* Define command operator overload */
 inline std::ostream& operator << (std::ostream& os, Flag& setting)
 {
-	ConsoleInterface::setColor(setting.color);
+	Cmder::setColor(setting.color);
 	return os;
 }
 
 inline std::ostream& operator << (std::ostream& os, Flag&& setting)
 {
-	ConsoleInterface::setColor(setting.color);
+	Cmder::setColor(setting.color);
 	return os;
 }
 

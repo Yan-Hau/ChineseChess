@@ -18,6 +18,9 @@
     <ClInclude Include="pch.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="ConsoleInterface.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -26,10 +29,13 @@
     <ClCompile Include="pch.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="ChineseChess.cpp">
+    <ClCompile Include="ConsoleInterface.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleInterface.cpp">
+    <ClCompile Include="Board.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
