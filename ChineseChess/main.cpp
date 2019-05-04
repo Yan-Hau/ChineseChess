@@ -11,7 +11,7 @@ int main()
 	bool state = true;
 	Cmder box;
 	Board board;
-	box.initialize(30, 100);
+	box.initialize(27, 100);
 	
 	do
 	{

@@ -84,9 +84,10 @@ void Board::put(Position pos)
 {
 }
 
-void Board::put(int x, int y)
+void Board::put(Chess chess)
 {
-
+	Cmder::setCursor(this->cursor[chess.y][chess.x]);
+	cout << chess.name;
 }
 
 void Board::setPointer(int dx , int dy)

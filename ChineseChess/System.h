@@ -66,10 +66,11 @@ namespace System
 		cout << "|  [1;36m¤l        [30m\\¢ª[m¢© [1;30m¢y[37;43m¢k         [;33m¢«                [30;43m¢«                ¢¨[37;40m                             |" << '\n';
 		cout << "|           [33m¢¬[30;43m¢«[1;40m\ [m¢ª[1;47m¢h¢h[;43m        [33;40m¢«                [30;43m¢«                ¢¨[37;40m                               |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
+		cout << "|                                                                                                  |" << '\n';
 		cout << "|     ######      #     #       #####      ###     #      ######      ######      ######           |" << '\n';
 		cout << "|     #           #     #         #        #  #    #      #           #           #                |" << '\n';
-		cout << "|     #           #######         #        #   #   #      #####       ######      #####            |" << '\n';
-		cout << "|     #           #     #         #        #    #  #      #                #      #                |" << '\n';
+		cout << "|     #           #######         #        #   #   #      ####        ######      ####             |" << '\n';
+	//	cout << "|     #           #     #         #        #    #  #      #                #      #                |" << '\n';
 		cout << "|     #           #     #         #        #     # #      #                #      #                |" << '\n';
 		cout << "|     ######      #     #       #####      #     ###      ######      ######      ######           |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
@@ -151,11 +152,11 @@ namespace System
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
-		cout << "|                                       | ESC: Menu (¥D¿ï³æ)                                       |" << '\n';
-		cout << "|                                       | -  : Previous Stepundo (¤W¤@¨B)                          |" << '\n';
-		cout << "|                                       | +  : Undo (´_­ì)                                         |" << '\n';
-		cout << "|                                       | ¡ö¡ô¡õ¡÷ : Move Cursor (²¾°Ê´å¼Ð)                        |" << '\n';
-		cout << "|                                       | Enter : Select (¿ï¾Ü)                                    |" << '\n';
+		cout << "|                                       | "<< Cmder::FONT_GREEN <<" ESC" << Cmder::FONT_WHITE <<      " : Menu (¥D¿ï³æ)                                     |" << '\n';
+		cout << "|                                       | "<< Cmder::FONT_GREEN <<" -  " << Cmder::FONT_WHITE <<      " : Previous Stepundo (¤W¤@¨B)                        |" << '\n';
+		cout << "|                                       | "<< Cmder::FONT_GREEN <<" +  " << Cmder::FONT_WHITE <<      " : Undo (´_­ì)                                       |" << '\n';
+		cout << "|                                       | "<< Cmder::FONT_GREEN <<" ¡ö¡ô¡õ¡÷ " << Cmder::FONT_WHITE <<" : Move Cursor (²¾°Ê´å¼Ð)                      |" << '\n';
+		cout << "|                                       | "<< Cmder::FONT_GREEN <<" Enter " << Cmder::FONT_WHITE <<   " : Select (¿ï¾Ü)                                  |" << '\n';
 		cout << "|                                       |                                                          |" << '\n';
 //      cout << "|                                       |                                                          |" << '\n';
 		cout << "|==================================================================================================|" << endl;
@@ -197,6 +198,7 @@ namespace System
 
 				/* Reset other unselected option color */
 				Cmder::setCursor( board.getPointer() );
+				
 			}
 			return true;
 		}();

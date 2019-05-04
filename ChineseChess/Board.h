@@ -4,6 +4,14 @@
 #include <vector>
 #include <iostream>
 using namespace std;
+
+typedef struct _chess {
+	short x;
+	short y;
+	string name;
+	short ID;
+}Chess;
+
 typedef struct _pos {
 	int x;
 	int y;
@@ -20,7 +28,7 @@ public:
 	~Board();
 	void print();
 	void put(Position);
-	void put(int , int);
+	void put(Chess);
 	void setPointer(int , int);
 	COORD getPointer();
 };

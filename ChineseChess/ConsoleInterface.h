@@ -92,10 +92,3 @@ inline Flag operator | (Flag base, Flag adder)
 {
 	return Flag{ static_cast<WORD> (base.color | adder.color) };
 }
-
-
-
-
-
-
-
