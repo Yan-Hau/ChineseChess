@@ -3,6 +3,7 @@
 #include <iostream>
 #include "ConsoleInterface.h"
 #include "Board.h"
+#include "Chess.h"
 namespace System 
 {
 	bool menu();
@@ -10,8 +11,8 @@ namespace System
 	bool menuBrand();
 	bool gameBrand();
 	bool option();
-	string nextOne(int v);
-
+	bool test(Chess x);
+	void changePosition(Chess&, Chess&);
 	/* Stage 1 : Menu */
 	inline bool menu()
 	{
@@ -104,20 +105,48 @@ namespace System
 	{
 		/* Command Box initialize */
 		Board board;
-		
 		gameBrand();
+		Chess ChessTableMap[10][9];
 
+		/* Initial Virtual ChessTableMap */
+		auto makeContainer = [&]() -> void {
+			string name[] = { "0" ,"將","士","象","車","馬","包","卒","帥","仕","相","車","傌","炮","兵" };
+			for (int i = 0; i < 10; ++i)
+			{
+				for (int j = 0; j < 9; ++j)
+				{
+					int ID = Chess::ChessTable[i][j];
+					short camp = (ID == 0) ? 2 : (ID / 8);
+					Chess temp(j , i , ID , name[ID] , ID!=0 , camp);
+					ChessTableMap[i][j] = temp;
+				}
+			}
+		};
+		auto refreshBoard = [&]() -> void {
+			board.print();
+			for (int i = 0; i < 10; ++i)
+			{
+				for (int j = 0; j < 9; ++j)
+				{
+					board.put(ChessTableMap[i][j]);
+				}
+			}
+		};
+		/* Re-print board */
 		board.print();
-
+		makeContainer();
+		refreshBoard();
+		
 		/* Listen Keyboard-event */
 		int keypress;
-		COORD currentPosition = Cmder::getCursor();
 		board.setPointer(0, 9);
+		Cmder::setCursor(board.getPointer());
+		bool isSelected = false;
+		Chess* current = new Chess();
 		return [&]() -> bool {
 			while (true)
 			{
 				keypress = _getch();
-
 				switch (keypress)
 				{
 				case 72:	//Key press Up
@@ -152,6 +181,35 @@ namespace System
 					break;
 
 				case 13:	//Key press Enter
+					COORD pos = board.getCursor();
+					
+					/* 移動 */
+					if( isSelected && ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)
+					{
+						if ((*current).ChangeChess(pos.X, pos.Y))
+						{
+							COORD currentPos = current->getPosition();
+							changePosition(ChessTableMap[currentPos.Y][currentPos.X], ChessTableMap[pos.Y][pos.X]);
+							Chess::Turn ^= 1;
+						}
+						isSelected = false;
+						makeContainer();
+						refreshBoard();
+						break;
+					}
+
+					/*未選擇，或是選同陣營的*/
+					else if( (!isSelected || ChessTableMap[pos.Y][pos.X].getCamp() == Chess::Turn) )
+					{
+						/*選不同陣營*/
+						if (ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)	break;
+
+						if (ChessTableMap[pos.Y][pos.X].getID() != 0)
+						{
+							(*current) = ChessTableMap[pos.Y][pos.X];
+							isSelected = true;
+						}
+					}
 					break;
 				
 				case 83:    //Key press Delete
@@ -196,10 +254,11 @@ namespace System
 					break;
 				}
 
+				
 				/* Reset other unselected option color */
-				Cmder::setCursor( board.getPointer() );
-
-
+				//Cmder::setCursor(board.getPointer());
+				test(*current);
+				Cmder::setCursor(board.getPointer());
 			}
 			
 			return true;
@@ -302,12 +361,32 @@ namespace System
 		return ch == 'a' ? true : false;
 	}
 
-	inline string nextOne(int v)
+	inline bool test(Chess x)
 	{
-		string str = "\v";
-		for (int i = 0; i < v; ++i)
-			str.push_back('\b');
-		return str;
+		Cmder::setCursor(0,26);
+		cout << "                                          ";
+		Cmder::setCursor(0, 26);
+		if( x.getCamp() == 0 )
+			Cmder::setColor(CLI_FONT_BLACK | CLI_BACK_WHITE);
+		else
+			Cmder::setColor(CLI_FONT_RED | CLI_BACK_WHITE);
+
+		cout <<"  ID:" <<x.getID() 
+			<< "  Name: " << x.getName() 
+			<< "  Pos:{" << x.getPosition().X << "," << x.getPosition().Y << "} "
+			<< (x.getCamp() == 1 ? "紅方" : x.getCamp() == 0 ? "黑方" : "空") << ", Now Turn: ";
+		cout << (Chess::Turn == 1 ? "RED" : "BLACK" )<< '\n';
+
+		Cmder::setColor(CLI_FONT_GREEN);
+		Chess::PrintTable();
+		return true;
+	}
+
+	inline void changePosition(Chess& t1, Chess& t2)
+	{
+		Chess t3 = t1;
+		t1 = t2;
+		t2 = t3;
 	}
 }
 

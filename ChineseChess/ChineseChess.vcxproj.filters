@@ -27,10 +27,10 @@
     <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Point.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Chess.h">
+    <ClInclude Include="System.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="System.h">
+    <ClInclude Include="Chess.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
@@ -45,6 +45,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Chess.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

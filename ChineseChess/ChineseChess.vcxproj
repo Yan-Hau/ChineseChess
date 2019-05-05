@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Chess.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ConsoleInterface.cpp" />
     <ClCompile Include="pch.cpp">
