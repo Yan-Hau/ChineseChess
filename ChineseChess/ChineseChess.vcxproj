@@ -153,11 +153,14 @@
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="..\..\Lynn\source\repos\Project01_ChineseChess\ChineseChess\Point.h" />
+    <ClInclude Include="Chess.h" />
     <ClInclude Include="ConsoleInterface.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Chess.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ConsoleInterface.cpp" />
     <ClCompile Include="pch.cpp">
