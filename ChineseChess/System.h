@@ -30,7 +30,7 @@ namespace System
 		/* Menu Option */
 		string menu[] = { "開始遊戲" , "讀取紀錄" , "結束遊戲" };
 		function<bool()> menuOption[] = {
-			[]() -> bool { //開始遊戲
+			[]() -> bool {		//開始遊戲
 				Cmder::setCursor(COORD{0,0});
 				return game();
 			},
@@ -202,12 +202,12 @@ namespace System
 						if (current->ChangeChess(pos.X, pos.Y))
 						{
 							Chess::Turn ^= 1;
-							swap(current, &ChessTableMap[pos.Y][pos.X]);
+							//swap(current, &ChessTableMap[pos.Y][pos.X]);
 						}
 						
 						/* 不管是否移動，刷新畫面 */
 						
-						//makeContainer();
+						makeContainer();
 						refreshBoard();
 						break;
 					}
@@ -331,7 +331,7 @@ namespace System
 		cout << "====================================================================================================" << '\n';
 		cout << "|                                       |  戰      況      顯      示                              |" << '\n';
 		cout << "|                                       |==========================================================|" << '\n';
-		cout << "|                                       |  步      數  |    " << Cmder::FONT_RED << "紅         方    " << Cmder::FONT_WHITE << "|" << Cmder::FONT_GREEN << "    黑         方    " << Cmder::FONT_WHITE << "|\n";
+		cout << "|                                       |  步      數  |    " << Cmder::FONT_RED << "紅         方    " << Cmder::FONT_WHITE << "|" << (Cmder::FONT_BLACK | Cmder::FONT_LIGHT) << "    黑         方    " << Cmder::FONT_WHITE << "|\n";
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';

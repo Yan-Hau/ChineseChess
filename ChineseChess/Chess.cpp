@@ -24,7 +24,8 @@ void Chess::PrintTable()
 {
 	for (int y = 0; y < 10; y++) {
 		for (int x = 0; x < 9; x++) {
-			cout << ChessTable[y][x] << " ";
+			//cout << cout.width(2) << ChessTable[y][x] << " ";
+			printf("%-2d ", ChessTable[y][x]);
 		}
 		cout << endl;
 	}
