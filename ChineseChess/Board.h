@@ -21,7 +21,7 @@ public:
 	Board();
 	~Board();
 	void print();
-	void put(Chess);
+	void put(Chess*);
 	void setPointer(int , int);
 	COORD getCursor();
 	COORD getPointer();

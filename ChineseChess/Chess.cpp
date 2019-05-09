@@ -39,6 +39,7 @@ Chess::Chess(short X, short Y, short ID , string Name, bool State , short Camp)
 	this->ID = ID;
 	this->state = State;
 	this->camp = Camp;
+	this->beChoice = false;
 	Chess::ChessTable[y][x] = this->ID;
 }
 Chess::Chess()
@@ -46,8 +47,9 @@ Chess::Chess()
 	this->x = -1;
 	this->y = -1;
 	this->ID = 0;
-	this->name = "";
+	this->name = "？";
 	this->state = false;
+	this->beChoice = false;
 	this->camp = 2;
 }
 
@@ -239,7 +241,7 @@ int Chess::JudgeBetween(short targetX, short targetY)
 //走路
 bool Chess::ChangeChess(short targetX, short targetY)
 {
-	Cmder::setCursor(60, 26);
+	Cmder::setCursor(0, 27);
 	if (JudgeMove(targetX, targetY) && JudgeChess(targetX, targetY))
 	{
 		//吃棋
@@ -271,9 +273,20 @@ bool Chess::ChangeChess(short targetX, short targetY)
 	}
 }
 
+// 取得Private
 bool Chess::isLife()
 {
 	return this->state;
+}
+
+bool Chess::isCurrent()
+{
+	return this->beChoice;
+}
+
+void Chess::setCurrent(bool choice)
+{
+	this->beChoice = choice;
 }
 
 void Chess::operator=(Chess& ref)

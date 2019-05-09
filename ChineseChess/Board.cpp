@@ -79,35 +79,48 @@ void Board::print()
 	Cmder::setCursor(4, 21);
 }
 
-
-
-void Board::put(Chess chess)
+// 輸出棋子
+void Board::put(Chess* chess)
 {
-
-	if (chess.isLife() == true)
+	/* 該棋子為活 */
+	if (chess->isLife() == true)
 	{
 		Cmder::setColor();
-		if (chess.getID() <= 7)
-			Cmder::setColor(CLI_FONT_WHITE);
+		
+
+		//黑方
+		if (chess->getID() <= 7)
+			Cmder::setColor(CLI_FONT_BLACK | CLI_FONT_LIGHT);
+
+		//紅方
 		else
 			Cmder::setColor(CLI_FONT_RED);
-		COORD pos = chess.getPosition();
+
+		//被選擇
+		if (chess->isCurrent())
+			Cmder::setColor(CLI_FONT_YELLOW | CLI_BACK_BLACK | CLI_BACK_LIGHT);
+
+		COORD pos = chess->getPosition();
 		Cmder::setCursor(this->cursor[pos.Y][pos.X]);
-		cout << chess.getName();
+		cout << chess->getName();
+		Cmder::setColor();
 	}
 }
 
+// 設定游標在CLI的位置
 void Board::setPointer(int dx , int dy)
 {
 	this->pointerX = (this->pointerX + dx) % 9;
 	this->pointerY = (this->pointerY + dy) % 10;
 }
 
+// 取得游標在CLI的位置
 COORD Board::getPointer()
 {
 	return { this->cursor[this->pointerY][this->pointerX] };
 }
 
+// 取得游標在棋盤的座標
 COORD Board::getCursor()
 {
 	return { this->pointerX ,this->pointerY };

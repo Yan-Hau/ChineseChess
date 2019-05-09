@@ -13,6 +13,7 @@ private:
 	short ID;
 	string name;
 	bool state;										 //true為活，false為死棋
+	bool beChoice;
 	bool JudgeMove   (short targetX, short targetY); //判斷移動是否符合棋盤規定
 	bool JudgeChess  (short targetX, short targetY); //判斷走棋吃棋是否符合棋種
 	int  JudgeBetween(short targetX, short targetY); //兩點間棋子數目
@@ -22,6 +23,8 @@ public:
 	Chess();
 	~Chess() {}
 	bool isLife();
+	bool isCurrent();
+	void setCurrent(bool);
 	string getName();
 	short getID();
 	short getCamp();
