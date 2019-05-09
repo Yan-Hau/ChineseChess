@@ -13,6 +13,7 @@ int main()
 	Board board;
 	box.initialize(40, 100);
 	
+	/* Application Entrace*/
 	do
 	{
 		state = System::menu();
