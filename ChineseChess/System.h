@@ -12,7 +12,8 @@ namespace System
 	bool gameBrand();
 	bool option();
 	bool test(Chess x);
-	void changePosition(Chess&, Chess&);
+	void change(Chess* t1 , Chess* t2);
+
 	/* Stage 1 : Menu */
 	inline bool menu()
 	{
@@ -78,8 +79,10 @@ namespace System
 					case 13:	//Key press Enter
 						if (menuOffset == EXIT_GAME)
 							return false;
+
 						if (!menuOption[menuOffset]())
 							return false;
+
 						break;
 						
 
@@ -95,8 +98,8 @@ namespace System
 					cout << menu[i];
 				}
 				select(menuOffset);
-				if (Chess::isEnd == true)
-					option();
+
+				
 			}
 			return true;
 		}();
@@ -124,13 +127,14 @@ namespace System
 				}
 			}
 		};
+
 		auto refreshBoard = [&]() -> void {
 			board.print();
 			for (int i = 0; i < 10; ++i)
 			{
 				for (int j = 0; j < 9; ++j)
 				{
-					board.put(ChessTableMap[i][j]);
+					board.put( &ChessTableMap[i][j] );
 				}
 			}
 		};
@@ -148,6 +152,8 @@ namespace System
 		return [&]() -> bool {
 			while (true)
 			{
+				test(*current);
+				Cmder::setCursor(board.getPointer());
 				keypress = _getch();
 				switch (keypress)
 				{
@@ -183,19 +189,25 @@ namespace System
 					break;
 
 				case 13:	//Key press Enter
-					COORD pos = board.getCursor();
+					COORD pos = board.getCursor(); //光標選取對象
 					
-					/* 移動 */
-					if( isSelected && ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)
+					/* 移動 (以選擇，且不可移動至同陣營的棋子子上 ) */
+					if( isSelected && ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn )
 					{
-						if ((*current).ChangeChess(pos.X, pos.Y))
-						{
-							COORD currentPos = current->getPosition();
-							changePosition(ChessTableMap[currentPos.Y][currentPos.X], ChessTableMap[pos.Y][pos.X]);
-							Chess::Turn ^= 1;
-						}
+						/* 重置選擇狀態 */
 						isSelected = false;
-						makeContainer();
+						current->setCurrent(false);
+						
+						/* 移動後，交換回合 */
+						if (current->ChangeChess(pos.X, pos.Y))
+						{
+							Chess::Turn ^= 1;
+							change(current, &ChessTableMap[pos.Y][pos.X]);
+						}
+						
+						/* 不管是否移動，刷新畫面 */
+						
+						//makeContainer();
 						refreshBoard();
 						break;
 					}
@@ -203,15 +215,24 @@ namespace System
 					/*未選擇，或是選同陣營的*/
 					else if( (!isSelected || ChessTableMap[pos.Y][pos.X].getCamp() == Chess::Turn) )
 					{
-						/*選不同陣營*/
+						/* 選不同陣營 */
 						if (ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)	break;
 
+						/* 選非空地的位置 */
 						if (ChessTableMap[pos.Y][pos.X].getID() != 0)
 						{
-							(*current) = ChessTableMap[pos.Y][pos.X];
+							/* 重置原本狀態 */
+							current->setCurrent(false);
+
+							/* 選取目前棋子 */
+							current = &ChessTableMap[pos.Y][pos.X];
+							current->setCurrent( true );
 							isSelected = true;
+							refreshBoard();
 						}
 					}
+
+					
 					break;
 				
 				case 83:    //Key press Delete
@@ -245,22 +266,22 @@ namespace System
 					break;
 
 				default:
-					if (keypress != 224)
-					{
-						Cmder::setCursor(0, 26);
-						cout << "                           ";
-						Cmder::setCursor(0, 26);
-						cout << keypress;
-						option();
-					}
+					/*
+					Cmder::setCursor(0, 26);
+					printf("%100c", ' ');
+					Cmder::setCursor(0, 26);
+					cout << "Key: " << keypress;
+					*/
 					break;
 				}
 
-				
+				if (Chess::isEnd == true)
+				{
+					return false;
+				}
 				/* Reset other unselected option color */
-				//Cmder::setCursor(board.getPointer());
-				test(*current);
-				Cmder::setCursor(board.getPointer());
+				
+				
 			}
 			
 			return true;
@@ -337,6 +358,7 @@ namespace System
 		return true;
 	}
 
+	/* 呼叫主選單(暫定) */
 	inline bool option()
 	{
 		Board b;
@@ -363,32 +385,31 @@ namespace System
 		return ch == 'a' ? true : false;
 	}
 
+	/* 測試，輸出目前位置 */
 	inline bool test(Chess x)
 	{
-		Cmder::setCursor(0,26);
-		cout << "                                          ";
 		Cmder::setCursor(0, 26);
-		if( x.getCamp() == 0 )
-			Cmder::setColor(CLI_FONT_BLACK | CLI_BACK_WHITE);
-		else
-			Cmder::setColor(CLI_FONT_RED | CLI_BACK_WHITE);
+		printf("%100c", ' ');
+		Cmder::setCursor(0, 26);
 
-		cout <<"  ID:" <<x.getID() 
-			<< "  Name: " << x.getName() 
-			<< "  Pos:{" << x.getPosition().X << "," << x.getPosition().Y << "} "
-			<< (x.getCamp() == 1 ? "紅方" : x.getCamp() == 0 ? "黑方" : "空") << ", Now Turn: ";
-		cout << (Chess::Turn == 1 ? "RED" : "BLACK" )<< '\n';
+		Cmder::setColor(CLI_FONT_PURPLE | CLI_FONT_LIGHT);
 
-		Cmder::setColor(CLI_FONT_GREEN);
-		Chess::PrintTable();
+		cout << (x.getCamp() == 1 ? "紅方" : x.getCamp() == 0 ? "黑方" : "    " ) << "   " << x.getName()
+			 << "   Position:{" << x.getPosition().X << "," << x.getPosition().Y << "}   "
+			 << (x.getCamp() == 1 ? "紅方" : x.getCamp() == 0 ? "黑方" : "空") << "   Turn: "
+			 << (Chess::Turn == 1 ? "紅方" : "黑方") << "   "
+			 << (Chess::isEnd ? "已結束" : "未結束") << "\n\n";
+		
+		Cmder::setColor(CLI_FONT_CYAN);
+		//Chess::PrintTable();
 		return true;
 	}
 
-	inline void changePosition(Chess& t1, Chess& t2)
+	void change(Chess* t1, Chess* t2)
 	{
-		Chess t3 = t1;
-		t1 = t2;
-		t2 = t3;
+		Chess t3 = *t1;
+		*t1 = *t2;
+		*t2 = t3;
 	}
 }
 
