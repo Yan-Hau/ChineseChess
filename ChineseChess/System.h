@@ -95,6 +95,8 @@ namespace System
 					cout << menu[i];
 				}
 				select(menuOffset);
+				if (Chess::isEnd == true)
+					option();
 			}
 			return true;
 		}();

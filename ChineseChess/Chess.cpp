@@ -83,8 +83,8 @@ bool Chess::JudgeMove(short targetX, short targetY)
 	}
 
 
-	//同陣營（無法吃棋）
-	if (ChessTable[targetY][targetX] != 0 && this->camp == Chess::Turn)
+	//目標位置與當前玩家同陣營（無法吃棋）
+	if (ChessTable[targetY][targetX] != 0 && (ChessTable[targetY][targetX]-1)/7 == Chess::Turn)
 	{
 		cout << "e同陣營（無法吃棋）";// << endl;
 		return false;
@@ -247,7 +247,10 @@ bool Chess::ChangeChess(short targetX, short targetY)
 		{
 			//如果將或帥被吃掉，遊戲結束
 			if (ChessTable[targetY][targetX] == 1 || ChessTable[targetY][targetX] == 8)
+			{
 				isEnd = true;
+				cout << "遊戲結束";
+			}
 
 			ChessTable[targetY][targetX] = 0;
 			state = false; //死棋
