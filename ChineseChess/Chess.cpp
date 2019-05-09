@@ -125,7 +125,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 		int tmpY = targetY - y;
 
 		if (tmpX * tmpX + tmpY * tmpY == 8 //走田
-			&& ChessTable[x+tmpX/2][y+tmpY/2] == 0) //不踩象眼
+			&& ChessTable[y+tmpY/2][x+tmpX/2] == 0) //不踩象眼
 
 			//不過河
 			if ((ID > 7 && targetY > 4) || (ID <= 7 && targetY < 5))
@@ -147,7 +147,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 		int tmpY = targetY - y;
 
 		if (tmpX * tmpX + tmpY * tmpY == 5 //走日
-			&& ChessTable[(x+tmpX/2)][y+tmpY/2] == 0) //沒有憋馬腳
+			&& ChessTable[(y+tmpY/2)][x+tmpX/2] == 0) //沒有憋馬腳
 
 			return true;
 	}
@@ -183,7 +183,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 			else //沒過河
 			{
 				//只能往前走
-				if ((ID > 7 && tmpX == -1) || (ID <= 7 && tmpX == 1))
+				if ((ID > 7 && tmpY == -1) || (ID <= 7 && tmpY == 1))
 					return true;
 			}
 		}
@@ -204,14 +204,14 @@ int Chess::JudgeBetween(short targetX, short targetY)
 		{
 			for (int i = targetY + 1; i < y; i++)
 			{
-				if (ChessTable[x][i] != 0) num++;
+				if (ChessTable[i][x] != 0) num++;
 			}
 		}
 		else
 		{
 			for (int i = y + 1; i < targetY; i++)
 			{
-				if (ChessTable[x][i] != 0) num++;
+				if (ChessTable[i][x] != 0) num++;
 			}
 		}
 	}
@@ -222,14 +222,14 @@ int Chess::JudgeBetween(short targetX, short targetY)
 		{
 			for (int i = targetX + 1; i < x; i++)
 			{
-				if (ChessTable[i][y] != 0) num++;
+				if (ChessTable[y][i] != 0) num++;
 			}
 		}
 		else
 		{
 			for (int i = x + 1; i < targetX; i++)
 			{
-				if (ChessTable[i][y] != 0) num++;
+				if (ChessTable[y][i] != 0) num++;
 			}
 		}
 	}
