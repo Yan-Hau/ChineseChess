@@ -12,7 +12,7 @@ namespace System
 	bool gameBrand();
 	bool option();
 	bool test(Chess x);
-	void change(Chess* t1 , Chess* t2);
+	void swap(Chess* t1 , Chess* t2);
 
 	/* Stage 1 : Menu */
 	inline bool menu()
@@ -202,7 +202,7 @@ namespace System
 						if (current->ChangeChess(pos.X, pos.Y))
 						{
 							Chess::Turn ^= 1;
-							change(current, &ChessTableMap[pos.Y][pos.X]);
+							swap(current, &ChessTableMap[pos.Y][pos.X]);
 						}
 						
 						/* 不管是否移動，刷新畫面 */
@@ -401,11 +401,11 @@ namespace System
 			 << (Chess::isEnd ? "已結束" : "未結束") << "\n\n";
 		
 		Cmder::setColor(CLI_FONT_CYAN);
-		//Chess::PrintTable();
+		Chess::PrintTable();
 		return true;
 	}
 
-	void change(Chess* t1, Chess* t2)
+	void swap(Chess* t1, Chess* t2)
 	{
 		Chess t3 = *t1;
 		*t1 = *t2;
