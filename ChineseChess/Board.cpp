@@ -65,13 +65,13 @@ void Board::print()
 		Cmder::setCursor(pos.X, ++pos.Y);
 	}
 	/* 黑色方 */
-	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_WHITE);
+	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_RED | CLI_FONT_BLUE | CLI_FONT_LIGHT);
 	Cmder::setCursor(3, 2);
 	for (auto& element : this->base[0])
 		cout << element;
 
 	/* 紅色方 */
-	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_RED);
+	Cmder::setColor(CLI_BACK_BLACK | CLI_FONT_RED | CLI_FONT_BLUE | CLI_FONT_LIGHT);
 	Cmder::setCursor(3, 22);
 	for(auto& element : this->base[20])
 		cout << element;
@@ -80,14 +80,21 @@ void Board::print()
 }
 
 
-void Board::put(Position pos)
-{
-}
 
 void Board::put(Chess chess)
 {
-	Cmder::setCursor(this->cursor[chess.y][chess.x]);
-	cout << chess.name;
+
+	if (chess.isLife() == true)
+	{
+		Cmder::setColor();
+		if (chess.getID() <= 7)
+			Cmder::setColor(CLI_FONT_WHITE);
+		else
+			Cmder::setColor(CLI_FONT_RED);
+		COORD pos = chess.getPosition();
+		Cmder::setCursor(this->cursor[pos.Y][pos.X]);
+		cout << chess.getName();
+	}
 }
 
 void Board::setPointer(int dx , int dy)
@@ -99,4 +106,9 @@ void Board::setPointer(int dx , int dy)
 COORD Board::getPointer()
 {
 	return { this->cursor[this->pointerY][this->pointerX] };
+}
+
+COORD Board::getCursor()
+{
+	return { this->pointerX ,this->pointerY };
 }

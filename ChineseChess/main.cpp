@@ -13,7 +13,7 @@ int main()
 	Board board;
 	box.initialize(40, 100);
 	
-	/* Application Entrace*/
+	/* Application Entrace Test*/
 	do
 	{
 		state = System::menu();
