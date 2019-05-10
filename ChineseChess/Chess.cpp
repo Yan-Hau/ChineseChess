@@ -180,7 +180,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 
 		if (tmpX * tmpX + tmpY * tmpY == 1) //一次走一步
 		{
-			if ((ID > 7 && targetY < 4) || (ID <= 7 && targetY > 5)) //過河
+			if ((ID > 7 && targetY <= 4) || (ID <= 7 && targetY >= 5)) //過河
 				return true;
 
 			else //沒過河
