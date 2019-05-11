@@ -108,6 +108,12 @@ bool Chess::JudgeChess(short targetX, short targetY)
 			&& (targetX <= 5) && (targetX >= 3)
 			&& (targetY >= 7 || targetY <= 2)) //不出九宮
 			return true;
+
+		if (ChessTable[targetY][targetX] % 7 == 1) //王見王
+			if (x == targetX || y == targetY) //同一線上
+				if (!JudgeBetween(targetX, targetY)) //中間沒有棋子
+					return true;
+
 	}
 
 	//士仕
