@@ -4,15 +4,18 @@
 #include "ConsoleInterface.h"
 #include "Board.h"
 #include "Chess.h"
+#include "ChessLog.h"
 namespace System 
 {
 	bool menu();
 	bool game();
 	bool menuBrand();
 	bool gameBrand();
+	bool optionBrand();
 	bool option();
 	bool test(Chess x);
 	void swap(Chess* t1 , Chess* t2);
+	ChessLog boardRecoed;
 
 	/* Stage 1 : Menu */
 	inline bool menu()
@@ -25,20 +28,48 @@ namespace System
 		};
 		const int EXIT_GAME = 2;
 		int keypress = 0, menuOffset = 0;
-		
+		boardRecoed.create();
 		
 		/* Menu Option */
 		string menu[] = { "開始遊戲" , "讀取紀錄" , "結束遊戲" };
 		function<bool()> menuOption[] = {
-			[]() -> bool {		//開始遊戲
+			[&]() -> bool {		//開始遊戲
 				Cmder::setCursor(COORD{0,0});
+				int initialChessTable[90] =
+				{
+					4,5,3,2,1,2,3,5,4,
+					0,0,0,0,0,0,0,0,0,
+					0,6,0,0,0,0,0,6,0,
+					7,0,7,0,7,0,7,0,7,
+					0,0,0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,0,0,
+					14,0,14,0,14,0,14,0,14,
+					0,13,0,0,0,0,0,13,0,
+					0,0,0,0,0,0,0,0,0,
+					11,12,10,9,8,9,10,12,11
+				};
+				for (int i = 0; i < 10; ++i)
+				{
+					for (int j = 0; j < 9; ++j)
+					{
+						Chess::ChessTable[i][j] = initialChessTable[9 * i + j];
+					}
+				}
 				return game();
 			},
 
 			[]() -> bool {       //讀取紀錄
 				Cmder::setCursor(COORD{0,0});
-				cout << "00002";
-				return 1;
+				boardRecoed.downloadLog();
+				int *temp = boardRecoed.getCurrentChessTable();
+				for (int i = 0; i < 10; ++i)
+				{
+					for (int j = 0; j < 9; ++j)
+					{
+						Chess::ChessTable[i][j] = temp[9 * i + j];
+					}
+				}
+				return game();
 			},
 
 			[]() -> bool {       //結束遊戲
@@ -149,6 +180,7 @@ namespace System
 		Cmder::setCursor(board.getPointer());
 		bool isSelected = false;
 		Chess* current = new Chess();
+		int *tempboard;
 		return [&]() -> bool {
 			while (true)
 			{
@@ -175,12 +207,57 @@ namespace System
 
 				case 27:    //Key press ESC
 					Cmder::setCursor(0, 26);
-					cout << "E";
+					if (!option())
+					{
+						return false;
+					}
+					break;
+
+				case 115:   //Key press S
+					boardRecoed.saveLog();
 					break;
 
 				case 91:    //Key press -
 					Cmder::setCursor(0, 26);
-					cout << "[";
+					if (boardRecoed.counter > 1)
+					{
+						boardRecoed.repent();
+						tempboard = boardRecoed.getCurrentChessTable();
+						for (int i = 0; i < 10; ++i)
+						{
+							for (int j = 0; j < 9; ++j)
+							{
+								Chess::ChessTable[i][j] = tempboard[9 * i + j];
+							}
+						}
+					}
+					else if (boardRecoed.counter == 1)
+					{
+						boardRecoed.repent();
+						int initialChessTable[90] =
+						{
+							4,5,3,2,1,2,3,5,4,
+							0,0,0,0,0,0,0,0,0,
+							0,6,0,0,0,0,0,6,0,
+							7,0,7,0,7,0,7,0,7,
+							0,0,0,0,0,0,0,0,0,
+							0,0,0,0,0,0,0,0,0,
+							14,0,14,0,14,0,14,0,14,
+							0,13,0,0,0,0,0,13,0,
+							0,0,0,0,0,0,0,0,0,
+							11,12,10,9,8,9,10,12,11
+						};
+						for (int i = 0; i < 10; ++i)
+						{
+							for (int j = 0; j < 9; ++j)
+							{
+								Chess::ChessTable[i][j] = initialChessTable[9 * i + j];
+							}
+						}
+					}
+					gameBrand();
+					makeContainer();
+					refreshBoard();
 					break;
 
 				case 93:    //Key press +
@@ -201,6 +278,7 @@ namespace System
 						/* 移動後，交換回合 */
 						if (current->ChangeChess(pos.X, pos.Y))
 						{
+							boardRecoed.record(*current->ChessTable, current->Turn);
 							Chess::Turn ^= 1;
 							//swap(current, &ChessTableMap[pos.Y][pos.X]);
 						}
@@ -358,31 +436,118 @@ namespace System
 		return true;
 	}
 
+	/* ESC主選單基底 */
+	inline bool optionBrand()
+	{
+		Cmder::setColor(CLI_FONT_LIGHT | CLI_FONT_WHITE);
+		Cmder::setCursor(29, 8);
+		cout << "================================================ "; Cmder::setCursor(29, 9);
+		cout << "|                                              | "; Cmder::setCursor(29, 10);
+		cout << "|            Exit Menu(離開主選單)             | "; Cmder::setCursor(29, 11);
+		cout << "|                                              | "; Cmder::setCursor(29, 12);
+		cout << "|            Save(保存)                        | "; Cmder::setCursor(29, 13);
+		cout << "|                                              | "; Cmder::setCursor(29, 14);
+		cout << "|            Exit GAME(離開遊戲)               | "; Cmder::setCursor(29, 15);
+		cout << "|                                              | "; Cmder::setCursor(29, 16);
+		cout << "================================================ ";
+		Cmder::setCursor(39, 14);
+		return true;
+	}
+
 	/* 呼叫主選單(暫定) */
 	inline bool option()
 	{
 		Board b;
 		COORD _current = Cmder::getCursor();
 
-		Cmder::setColor( CLI_FONT_LIGHT | CLI_FONT_WHITE );
-		Cmder::setCursor(29, 8);
-		cout << "================================================ "; Cmder::setCursor(29, 9);
-		cout << "|                                              | "; Cmder::setCursor(29, 10);
-		cout << "|                                              | "; Cmder::setCursor(29, 11);
-		cout << "|                                              | "; Cmder::setCursor(29, 12);
-		cout << "|                                              | "; Cmder::setCursor(29, 13);
-		cout << "|                                              | "; Cmder::setCursor(29, 14);
-		cout << "|         YES                     NO           | "; Cmder::setCursor(29, 15);
-		cout << "|                                              | "; Cmder::setCursor(29, 16);
-		cout << "================================================ ";
-		Cmder::setCursor(39, 14);
+		/* Variable initialize */
+		COORD menuPosition[] = {
+			{42,10} ,
+			{42,12} ,
+			{42,14}
+		};
+		const int EXIT_GAME = 2;
+		int keypress = 0, menuOffset = 0;
 
-		char ch = _getch();
 
-		gameBrand();
-		b.print();
-		Cmder::setCursor(_current);
-		return ch == 'a' ? true : false;
+		/* Menu Option */
+		string menu[] = { "Exit Menu(離開主選單)" , "Save(保存)" , "Exit GAME(離開遊戲)"};
+		function<bool()> menuOption[] = {
+			[&]() -> bool {		//離開主選單
+				Cmder::setCursor(COORD{0,0});
+				gameBrand();
+				b.print();
+				Cmder::setCursor(_current);
+				return game();
+			},
+			[&]() -> bool {       //保存
+				Cmder::setCursor(COORD{0,0});
+				boardRecoed.saveLog();
+				gameBrand();
+				b.print();
+				Cmder::setCursor(_current);
+				return game();
+			},
+			[]() -> bool {       //離開遊戲
+				Cmder::setCursor(COORD{0,0});
+				return false;
+			}
+		};
+
+		/* High-light Current selected option */
+		auto select = [&menuPosition, &menu](int offset) -> void {
+			Cmder::setCursor(menuPosition[offset]);
+			Cmder::setColor(CLI_FONT_LIGHT | CLI_FONT_BLUE);
+			cout << menu[offset];
+			Cmder::setCursor(menuPosition[offset]);
+		};
+
+		/* Entrance Brand  */
+		optionBrand();
+
+		/* Listen Keyboard-event */
+		select(0);
+		return [&]() -> bool {
+			while (true)
+			{
+				keypress = _getch();
+
+				switch (keypress)
+				{
+				case 72:	//Key press Up
+					menuOffset = (menuOffset + 2) % 3;
+					break;
+
+				case 80:	//Key press Down
+					menuOffset = (++menuOffset % 3);
+					break;
+
+				case 13:	//Key press Enter
+					if (menuOffset == EXIT_GAME)
+						return false;
+
+					if (!menuOption[menuOffset]())
+						return false;
+
+					break;
+
+
+				default:
+					break;
+				}
+
+				/* Reset other unselected option color */
+				for (int i = 0; i < 3; ++i)
+				{
+					Cmder::setColor();
+					Cmder::setCursor(menuPosition[i]);
+					cout << menu[i];
+				}
+				select(menuOffset);
+
+			}
+			return true;
+		}();
 	}
 
 	/* 測試，輸出目前位置 */

@@ -33,6 +33,9 @@
     <ClInclude Include="Chess.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="ChessLog.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -48,6 +51,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="Chess.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessLog.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

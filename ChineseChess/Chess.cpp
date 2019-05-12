@@ -2,21 +2,12 @@
 #include "Chess.h"
 
 /* Static Variable */
-int Chess::ChessTable[10][9] = 
+int Chess::ChessTable[10][9] =
 {
-	4,5,3,2,1,2,3,5,4,
-	0,0,0,0,0,0,0,0,0,
-	0,6,0,0,0,0,0,6,0,
-	7,0,7,0,7,0,7,0,7,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	14,0,14,0,14,0,14,0,14,
-	0,13,0,0,0,0,0,13,0,
-	0,0,0,0,0,0,0,0,0,
-	11,12,10,9,8,9,10,12,11
+	
 };
 
-unsigned int Chess::Turn = 1;
+unsigned int Chess::Turn = 1;//起始方為紅方(代號紅:1 黑:0)
 
 bool Chess::isEnd = false;
 
@@ -108,6 +99,12 @@ bool Chess::JudgeChess(short targetX, short targetY)
 			&& (targetX <= 5) && (targetX >= 3)
 			&& (targetY >= 7 || targetY <= 2)) //不出九宮
 			return true;
+
+		if (ChessTable[targetY][targetX] % 7 == 1) //王見王
+			if (x == targetX || y == targetY) //同一線上
+				if (!JudgeBetween(targetX, targetY)) //中間沒有棋子
+					return true;
+
 	}
 
 	//士仕
@@ -180,7 +177,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 
 		if (tmpX * tmpX + tmpY * tmpY == 1) //一次走一步
 		{
-			if ((ID > 7 && targetY < 4) || (ID <= 7 && targetY > 5)) //過河
+			if ((ID > 7 && targetY <= 4) || (ID <= 7 && targetY >= 5)) //過河
 				return true;
 
 			else //沒過河
@@ -271,6 +268,60 @@ bool Chess::ChangeChess(short targetX, short targetY)
 	{
 		cout << "輸入錯誤" << endl;
 		return false;
+	}
+}
+bool Chess::CheckMate(short targetX, short targetY)   //判斷將死
+{
+	int King_posX[2] = { 0 };
+	int King_posY[2] = { 0 };
+	int count = 0;
+	for (int i = 0; i <= 10; i++) {    //找出雙方主將的座標
+		for (int j = 0; j <= 9; j++) {
+			if (ChessTable[j][i] % 7 == 1)
+			{
+				King_posY[count] = i;
+ 				King_posX[count] = j; //King_posX[0] 為將  King_posX[1] 為帥
+				count++;
+			}
+		}
+	}
+	if (King_posX[0] == King_posX[1])  //如果在同條線上
+	{
+		int tempChessTable[10][9];
+		for (int i = 0; i <= 10; i++) {    //暫時的Table來做模擬
+			for (int j = 0; j <= 9; j++) {
+				tempChessTable[i][j] = ChessTable[i][j];
+			}
+		}
+		tempChessTable[targetY][targetX] = tempChessTable[y][x];
+		tempChessTable[y][x] = 0;
+		for (int y = King_posY[0] + 1; y < King_posY[1]; y++) {
+			if (tempChessTable[y][King_posX[0]] != 0) //代表這步棋下完 不會被將軍
+				return false;
+		}
+		return true;
+	}
+	else
+		return false;
+}
+void Chess::MovingTip()
+{
+	int CanMoveNum = 0;
+	for (int i = 0; i <= 10; i++){
+		for (int j = 0; j <= 9; j++){
+			if (JudgeMove(j, i) && JudgeChess(j, i) && !CheckMate(j, i))  //尋找可以走的路線
+			{
+				CanMove[j][i] = true;
+				CanMoveNum++;
+			}
+			else
+				CanMove[j][i] = false;
+		}
+	}
+	if (CanMoveNum = 0) //沒有可走的路代表被將死 遊戲結束
+	{
+		isEnd = true;
+		cout << "遊戲結束";
 	}
 }
 
