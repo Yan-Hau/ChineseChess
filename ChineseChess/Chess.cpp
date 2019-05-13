@@ -304,24 +304,15 @@ bool Chess::CheckMate(short targetX, short targetY)   //判斷將死
 	else
 		return false;
 }
-void Chess::MovingTip()
+void Chess::MovingTip()  //提示可以走的
 {
-	int CanMoveNum = 0;
 	for (int i = 0; i <= 10; i++){
 		for (int j = 0; j <= 9; j++){
-			if (JudgeMove(j, i) && JudgeChess(j, i) && !CheckMate(j, i))  //尋找可以走的路線
-			{
+			if (JudgeMove(j, i) && JudgeChess(j, i) )  //尋找可以走的路線
 				CanMove[j][i] = true;
-				CanMoveNum++;
-			}
 			else
 				CanMove[j][i] = false;
 		}
-	}
-	if (CanMoveNum = 0) //沒有可走的路代表被將死 遊戲結束
-	{
-		isEnd = true;
-		cout << "遊戲結束";
 	}
 }
 
