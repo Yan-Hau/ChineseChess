@@ -53,6 +53,8 @@ void ChessLog::downloadLog()
 //Record current chess board
 void ChessLog::record(int ChessTable[], int Turn)
 {
+	tempRecord.clear();
+	tempTurn.clear();
 	int tempTurn = Turn;
 	vector<int> tempRecord;
 	for (int i = 0; i < 10; i++)
@@ -69,9 +71,26 @@ void ChessLog::record(int ChessTable[], int Turn)
 //Repent current chess board
 void ChessLog::repent()
 {
-	allRecord.pop_back();
-	turn.pop_back();
-	counter--;
+	if (allRecord.size() >= 1)
+	{
+		tempRecord.push_back(allRecord[allRecord.size() - 1]);
+		tempTurn.push_back(turn[turn.size() - 1]);
+		allRecord.pop_back();
+		turn.pop_back();
+		counter--;
+	}
+}
+//Recover the repent
+void ChessLog::recover()
+{
+	if (tempRecord.size() >= 1)
+	{
+		allRecord.push_back(tempRecord[tempRecord.size() - 1]);
+		turn.push_back(tempTurn[tempTurn.size() - 1]);
+		tempRecord.pop_back();
+		tempTurn.pop_back();
+		counter++;
+	}
 }
 //Clear the file and save chess score
 void ChessLog::saveLog()

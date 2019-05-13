@@ -255,14 +255,23 @@ namespace System
 							}
 						}
 					}
-					gameBrand();
 					makeContainer();
 					refreshBoard();
 					break;
 
 				case 93:    //Key press +
 					Cmder::setCursor(0, 26);
-					cout << "]";
+					boardRecoed.recover();
+					tempboard = boardRecoed.getCurrentChessTable();
+					for (int i = 0; i < 10; ++i)
+					{
+						for (int j = 0; j < 9; ++j)
+						{
+							Chess::ChessTable[i][j] = tempboard[9 * i + j];
+						}
+					}
+					makeContainer();
+					refreshBoard();
 					break;
 
 				case 13:	//Key press Enter
