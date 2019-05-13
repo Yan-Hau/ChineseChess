@@ -270,7 +270,7 @@ bool Chess::ChangeChess(short targetX, short targetY)
 		return false;
 	}
 }
-bool Chess::CheckMate(short targetX, short targetY)   //判斷將死
+ int Chess::CheckMate()   //判斷是否將死 與情形
 {
 	int King_posX[2] = { 0 };
 	int King_posY[2] = { 0 };
@@ -279,32 +279,39 @@ bool Chess::CheckMate(short targetX, short targetY)   //判斷將死
 		for (int j = 0; j <= 9; j++) {
 			if (ChessTable[j][i] % 7 == 1)
 			{
-				King_posY[count] = i;
- 				King_posX[count] = j; //King_posX[0] 為將  King_posX[1] 為帥
+				King_posY[count] = i; //King_posY[0] 為將的Y座標  King_posX[1] 為帥的Y座標
+ 				King_posX[count] = j; //King_posX[0] 為將的X座標  King_posX[1] 為帥的X座標
 				count++;
 			}
 		}
 	}
-	if (King_posX[0] == King_posX[1])  //如果在同條線上
+	if (King_posX[0] == King_posX[1])  //如果在同條線上 檢查是否會王見王
 	{
-		int tempChessTable[10][9];
-		for (int i = 0; i <= 10; i++) {    //暫時的Table來做模擬
-			for (int j = 0; j <= 9; j++) {
-				tempChessTable[i][j] = ChessTable[i][j];
-			}
-		}
-		tempChessTable[targetY][targetX] = tempChessTable[y][x];
-		tempChessTable[y][x] = 0;
 		for (int y = King_posY[0] + 1; y < King_posY[1]; y++) {
-			if (tempChessTable[y][King_posX[0]] != 0) //代表這步棋下完 不會被將軍
-				return false;
+			if (ChessTable[y][King_posX[0]] != 0) //代表這步棋下完 不會被將軍
+				return 0;
 		}
-		return true;
+		return 1;  //會王見王
 	}
 	else
-		return false;
+	{
+		for (int i = 0; i <= 10; i++) {
+			for (int j = 0; j <= 9; j++) {
+				if (ChessTable[i][j] % 7 >= 4 || ChessTable[i][j] % 7 == 0) //檢查 車 馬 包 卒
+				{
+					x = j;
+					y = i;
+					MovingTip();
+					if (CanMove[King_posY[0]][King_posX[0]])  //下完這步棋 將可以被對方吃掉 代表被紅方將軍
+						return 2;
+					else if (CanMove[King_posY[1]][King_posX[1]])  //下完這步棋 帥可以被對方吃掉 代表被黑方將軍
+						return 3;
+				}
+			}
+		}
+	}
 }
-void Chess::MovingTip()  //提示可以走的
+void Chess::MovingTip()  //提示所選擇的旗子可走的路線
 {
 	for (int i = 0; i <= 10; i++){
 		for (int j = 0; j <= 9; j++){
@@ -315,7 +322,17 @@ void Chess::MovingTip()  //提示可以走的
 		}
 	}
 }
-
+void Chess::doCheckMate() //檢查會不會被將軍
+{
+	if (CheckMate() == 0)
+		cout << "";
+	else if (CheckMate() == 1)
+		cout << "王見王";
+	else if (CheckMate() == 2)
+		cout << "紅方將軍";
+	else if (CheckMate() == 3)
+		cout << "黑方將軍";
+}
 // 取得Private
 bool Chess::isLife()
 {
