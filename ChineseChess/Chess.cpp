@@ -277,7 +277,7 @@ bool Chess::ChangeChess(short targetX, short targetY)
 	int count = 0;
 	for (int i = 0; i <= 10; i++) {    //找出雙方主將的座標
 		for (int j = 0; j <= 9; j++) {
-			if (ChessTable[j][i] % 7 == 1)
+			if (ChessTable[i][j] % 7 == 1)
 			{
 				King_posY[count] = i; //King_posY[0] 為將的Y座標  King_posX[1] 為帥的Y座標
  				King_posX[count] = j; //King_posX[0] 為將的X座標  King_posX[1] 為帥的X座標
