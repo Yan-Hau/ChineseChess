@@ -31,6 +31,7 @@ Chess::Chess(short X, short Y, short ID , string Name, bool State , short Camp)
 	this->beChoice = false;
 	Chess::ChessTable[y][x] = this->ID;
 }
+
 Chess::Chess()
 {
 	this->x = -1;
@@ -48,28 +49,28 @@ bool Chess::JudgeMove(short targetX, short targetY)
 	//目標位置和起始位置相同
 	if (this->x == targetX && this->y == targetY)
 	{
-		cout << "a目標位置和起始位置相同";// << endl;
+		cout << "目標位置和起始位置相同";// << endl;
 		return false;
 	}
 
 	//起始位置沒有棋子
 	if (ChessTable[y][x] == 0)
 	{
-		cout << "b起始位置沒有棋子";// << endl;
+		cout << "起始位置沒有棋子";// << endl;
 		return false;
 	}
 		
 	//陣營與當前玩家不同
 	if (this->camp != Chess::Turn)
 	{
-		cout << "c陣營與當前玩家不同";// << endl;
+		cout << "陣營與當前玩家不同";// << endl;
 		return false;
 	}
 
 	//目標位置超出棋盤範圍
 	if (targetX < 0 || targetX > 8 ||targetY < 0 || targetY > 9)
 	{
-		cout << "d目標位置超出棋盤範圍";// << endl;
+		cout << "目標位置超出棋盤範圍";// << endl;
 		return false;
 	}
 
@@ -77,7 +78,7 @@ bool Chess::JudgeMove(short targetX, short targetY)
 	//目標位置與當前玩家同陣營（無法吃棋）
 	if (ChessTable[targetY][targetX] != 0 && (ChessTable[targetY][targetX]-1)/7 == Chess::Turn)
 	{
-		cout << "e同陣營（無法吃棋）";// << endl;
+		cout << "同陣營（無法吃棋）";// << endl;
 		return false;
 	}
 
@@ -236,7 +237,7 @@ int Chess::JudgeBetween(short targetX, short targetY)
 //走路
 bool Chess::ChangeChess(short targetX, short targetY)
 {
-	Cmder::setCursor(0, 27);
+	Cmder::setColor(CLI_FONT_WHITE);
 	if (JudgeMove(targetX, targetY) && JudgeChess(targetX, targetY))
 	{
 		//吃棋
