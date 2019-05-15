@@ -20,6 +20,7 @@ namespace System
 	/* Stage 1 : Menu */
 	inline bool menu()
 	{
+		system("cls");
 		/* Variable initialize */
 		COORD menuPosition[] = { 
 			{71,19} , 
@@ -58,7 +59,7 @@ namespace System
 				return game();
 			},
 
-			[]() -> bool {       //讀取紀錄
+			[&]() -> bool {       //讀取紀錄
 				Cmder::setCursor(COORD{0,0});
 				boardRecoed.downloadLog();
 				int *temp = boardRecoed.getCurrentChessTable();
@@ -114,6 +115,13 @@ namespace System
 						if (!menuOption[menuOffset]())
 							return false;
 
+						else
+						{ 
+							menuBrand();
+							Chess::Turn = 1;
+							Chess::isEnd = false;
+						}
+
 						break;
 						
 
@@ -129,8 +137,6 @@ namespace System
 					cout << menu[i];
 				}
 				select(menuOffset);
-
-				
 			}
 			return true;
 		}();
@@ -255,6 +261,7 @@ namespace System
 							}
 						}
 					}
+					gameBrand();
 					makeContainer();
 					refreshBoard();
 					break;
@@ -364,7 +371,7 @@ namespace System
 
 				if (Chess::isEnd == true)
 				{
-					return false;
+					return true;
 				}
 				/* Reset other unselected option color */
 				
@@ -565,17 +572,42 @@ namespace System
 		printf("%100c", ' ');
 		Cmder::setCursor(0, 26);
 
+		//Cmder::setColor(CLI_FONT_PURPLE | CLI_FONT_LIGHT);
+		
+		if (Chess::Turn == 1)
+		{
+			Cmder::setColor(CLI_FONT_RED);
+			cout << Cmder::FONT_RED << "紅方回合 ";
+		}
+		else
+		{
+			Cmder::setColor(CLI_FONT_BLACK | CLI_FONT_LIGHT);
+			cout << Cmder::FONT_RED << "黑方回合 ";
+		}
+			
 		Cmder::setColor(CLI_FONT_PURPLE | CLI_FONT_LIGHT);
+		cout << (Chess::isEnd ? "已結束" : "未結束") << "   ";
 
-		cout << (x.getCamp() == 1 ? "紅方" : x.getCamp() == 0 ? "黑方" : "    " ) << "   " << x.getName()
-			 << "   Position:{" << x.getPosition().X << "," << x.getPosition().Y << "}   "
-			 << (x.getCamp() == 1 ? "紅方" : x.getCamp() == 0 ? "黑方" : "空") << "   Turn: "
-			 << (Chess::Turn == 1 ? "紅方" : "黑方") << "   "
-			 << (Chess::isEnd ? "已結束" : "未結束") << "\n\n";
-		/*
-		Cmder::setColor(CLI_FONT_CYAN);
-		Chess::PrintTable();
-		*/
+		if (x.getCamp() != 1 && x.getCamp() != 0)
+			return true;
+
+		if (x.getCamp() == 1)
+		{
+			Cmder::setColor(CLI_FONT_RED);
+			cout << "紅" << x.getName();
+		}
+
+		else
+		{
+			Cmder::setColor(CLI_FONT_BLACK | CLI_FONT_LIGHT);
+			cout << "黑" << x.getName();
+		}
+
+		Cmder::setColor(CLI_FONT_WHITE | CLI_FONT_LIGHT);
+		cout << " :Position:{" << x.getPosition().X + 1 << "," << x.getPosition().Y + 1 << "}   ";
+			 
+			 
+		
 		return true;
 	}
 

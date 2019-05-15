@@ -68,11 +68,12 @@ void ChessLog::record(int ChessTable[], int Turn)
 	turn.push_back(tempTurn);
 	counter++;
 }
-//Repent current chess board
+//Repent current chess board ฎฌดั
 void ChessLog::repent()
 {
 	if (allRecord.size() >= 1)
 	{
+		Chess::Turn ^= 1;
 		tempRecord.push_back(allRecord[allRecord.size() - 1]);
 		tempTurn.push_back(turn[turn.size() - 1]);
 		allRecord.pop_back();
@@ -85,6 +86,7 @@ void ChessLog::recover()
 {
 	if (tempRecord.size() >= 1)
 	{
+		Chess::Turn ^= 1;
 		allRecord.push_back(tempRecord[tempRecord.size() - 1]);
 		turn.push_back(tempTurn[tempTurn.size() - 1]);
 		tempRecord.pop_back();

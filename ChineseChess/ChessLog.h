@@ -28,7 +28,7 @@ public:
 	void saveLog();//Àx¦s¬ö¿ı
 	int* getCurrentChessTable();
 	int getCurrentTurn();
+
 public:
 	int counter = 0;
 };
-

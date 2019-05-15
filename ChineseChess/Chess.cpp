@@ -2,10 +2,7 @@
 #include "Chess.h"
 
 /* Static Variable */
-int Chess::ChessTable[10][9] =
-{
-	
-};
+int Chess::ChessTable[10][9] ={};
 
 unsigned int Chess::Turn = 1;//起始方為紅方(代號紅:1 黑:0)
 
@@ -270,7 +267,8 @@ bool Chess::ChangeChess(short targetX, short targetY)
 		return false;
 	}
 }
- int Chess::CheckMate()   //判斷是否將死 與情形
+
+int Chess::CheckMate()   //判斷是否將死 與情形
 {
 	int King_posX[2] = { 0 };
 	int King_posY[2] = { 0 };
@@ -285,6 +283,7 @@ bool Chess::ChangeChess(short targetX, short targetY)
 			}
 		}
 	}
+
 	if (King_posX[0] == King_posX[1])  //如果在同條線上 檢查是否會王見王
 	{
 		for (int y = King_posY[0] + 1; y < King_posY[1]; y++) {
@@ -293,6 +292,7 @@ bool Chess::ChangeChess(short targetX, short targetY)
 		}
 		return 1;  //會王見王
 	}
+	
 	else
 	{
 		for (int i = 0; i <= 10; i++) {
@@ -306,11 +306,14 @@ bool Chess::ChangeChess(short targetX, short targetY)
 						return 2;
 					else if (CanMove[King_posY[1]][King_posX[1]])  //下完這步棋 帥可以被對方吃掉 代表被黑方將軍
 						return 3;
+					else
+						return 0;
 				}
 			}
 		}
 	}
 }
+
 void Chess::MovingTip()  //提示所選擇的旗子可走的路線
 {
 	for (int i = 0; i <= 10; i++){
