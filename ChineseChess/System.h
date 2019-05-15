@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <functional>
 #include <iostream>
 #include "ConsoleInterface.h"
@@ -31,9 +31,9 @@ namespace System
 		boardRecoed.create();
 		
 		/* Menu Option */
-		string menu[] = { "¶}©l¹CÀ¸" , "Åª¨ú¬ö¿ı" , "µ²§ô¹CÀ¸" };
+		string menu[] = { "é–‹å§‹éŠæˆ²" , "è®€å–ç´€éŒ„" , "çµæŸéŠæˆ²" };
 		function<bool()> menuOption[] = {
-			[&]() -> bool {		//¶}©l¹CÀ¸
+			[&]() -> bool {		//é–‹å§‹éŠæˆ²
 				Cmder::setCursor(COORD{0,0});
 				int initialChessTable[90] =
 				{
@@ -58,7 +58,7 @@ namespace System
 				return game();
 			},
 
-			[]() -> bool {       //Åª¨ú¬ö¿ı
+			[]() -> bool {       //è®€å–ç´€éŒ„
 				Cmder::setCursor(COORD{0,0});
 				boardRecoed.downloadLog();
 				int *temp = boardRecoed.getCurrentChessTable();
@@ -72,7 +72,7 @@ namespace System
 				return game();
 			},
 
-			[]() -> bool {       //µ²§ô¹CÀ¸
+			[]() -> bool {       //çµæŸéŠæˆ²
 				Cmder::setCursor(COORD{0,0});
 				cout << "00003";
 				return 1;
@@ -146,7 +146,7 @@ namespace System
 
 		/* Initial Virtual ChessTableMap */
 		auto makeContainer = [&]() -> void {
-			string name[] = { "0" ,"±N","¤h","¶H","¨®","°¨","¥]","¨ò","«Ó","¥K","¬Û","¨®","ØX","¬¶","§L" };
+			string name[] = { "0" ,"å°‡","å£«","è±¡","è»Š","é¦¬","åŒ…","å’","å¸¥","ä»•","ç›¸","è»Š","å‚Œ","ç‚®","å…µ" };
 			for (int i = 0; i < 10; ++i)
 			{
 				for (int j = 0; j < 9; ++j)
@@ -217,7 +217,7 @@ namespace System
 					boardRecoed.saveLog();
 					break;
 
-				case 91:    //Key press -
+				case 91:    //Key press [
 					Cmder::setCursor(0, 26);
 					if (boardRecoed.counter > 1)
 					{
@@ -260,22 +260,22 @@ namespace System
 					refreshBoard();
 					break;
 
-				case 93:    //Key press +
+				case 93:    //Key press ]
 					Cmder::setCursor(0, 26);
 					cout << "]";
 					break;
 
 				case 13:	//Key press Enter
-					COORD pos = board.getCursor(); //¥ú¼Ğ¿ï¨ú¹ï¶H
+					COORD pos = board.getCursor(); //å…‰æ¨™é¸å–å°è±¡
 					
-					/* ²¾°Ê (¥H¿ï¾Ü¡A¥B¤£¥i²¾°Ê¦Ü¦P°}Àçªº´Ñ¤l¤l¤W ) */
+					/* ç§»å‹• (ä»¥é¸æ“‡ï¼Œä¸”ä¸å¯ç§»å‹•è‡³åŒé™£ç‡Ÿçš„æ£‹å­å­ä¸Š ) */
 					if( isSelected && ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn )
 					{
-						/* ­«¸m¿ï¾Üª¬ºA */
+						/* é‡ç½®é¸æ“‡ç‹€æ…‹ */
 						isSelected = false;
 						current->setCurrent(false);
 						
-						/* ²¾°Ê«á¡A¥æ´«¦^¦X */
+						/* ç§»å‹•å¾Œï¼Œäº¤æ›å›åˆ */
 						if (current->ChangeChess(pos.X, pos.Y))
 						{
 							boardRecoed.record(*current->ChessTable, current->Turn);
@@ -283,26 +283,26 @@ namespace System
 							//swap(current, &ChessTableMap[pos.Y][pos.X]);
 						}
 						
-						/* ¤£ºŞ¬O§_²¾°Ê¡A¨ê·sµe­± */
+						/* ä¸ç®¡æ˜¯å¦ç§»å‹•ï¼Œåˆ·æ–°ç•«é¢ */
 						
 						makeContainer();
 						refreshBoard();
 						break;
 					}
 
-					/*¥¼¿ï¾Ü¡A©Î¬O¿ï¦P°}Àçªº*/
+					/*æœªé¸æ“‡ï¼Œæˆ–æ˜¯é¸åŒé™£ç‡Ÿçš„*/
 					else if( (!isSelected || ChessTableMap[pos.Y][pos.X].getCamp() == Chess::Turn) )
 					{
-						/* ¿ï¤£¦P°}Àç */
+						/* é¸ä¸åŒé™£ç‡Ÿ */
 						if (ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)	break;
 
-						/* ¿ï«DªÅ¦aªº¦ì¸m */
+						/* é¸éç©ºåœ°çš„ä½ç½® */
 						if (ChessTableMap[pos.Y][pos.X].getID() != 0)
 						{
-							/* ­«¸m­ì¥»ª¬ºA */
+							/* é‡ç½®åŸæœ¬ç‹€æ…‹ */
 							current->setCurrent(false);
 
-							/* ¿ï¨ú¥Ø«e´Ñ¤l */
+							/* é¸å–ç›®å‰æ£‹å­ */
 							current = &ChessTableMap[pos.Y][pos.X];
 							current->setCurrent( true );
 							isSelected = true;
@@ -366,50 +366,49 @@ namespace System
 		}();
 	}
 
-	/* ¶i¤Jµe­±°ò©³ */
+	/* é€²å…¥ç•«é¢åŸºåº• */
 	inline bool menuBrand()
 	{
 		system("COLOR 07");
 		system("cls");
 		cout << "====================================================================================================" << '\n';
-		cout << "|  [1;36m    °_         [30m|¢@_[37m¡ş¢j [;33m¢¬[30;43m¢«                ¢¨[37;40m                [30;43m¢«            [37;40m                     |" << '\n';
-		cout << "|  [1;36mÆ[  ¤â        [30m¡ş   [37m  \ [;33m¡ş                 [30;43m¢«                ¢¨[37;40m                                   |" << '\n';
-		cout << "|  [1;36m´Ñ  µL      [30m¡ş  ¡½ [37m¡½ ¢j               [;30;43m¢«                ¢¨[37;40m                                     |" << '\n';
-		cout << "|  [1;36m¤£  ¦^     [30m¡ş     [37m   ¢x               [;30;43m¢«                ¢¨[37;40m                [33m¢¨[37m                     |" << '\n';
-		cout << "|  [1;36m»y  ¤j    [30m¡ş  [m¢@  ¡Ñ  /             [30;43m¢«                ¢¨[37;40m                [30;43m¢«  [37;40m                     |" << '\n';
-		cout << "|  [1;36m¯u  ¤V   [30m£°     \ __[;30;43m¢«            [33;40m¢«                [30;43m¢«                ¢¨[37;40m                         |" << '\n';
-		cout << "|  [1;36m§g  ¤Ò   [30m¢ª¢©   ¢y[37;43m¢j           [;33m¢«                [30;43m¢«                ¢¨[37;40m                           |" << '\n';
-		cout << "|  [1;36m¤l        [30m\\¢ª[m¢© [1;30m¢y[37;43m¢k         [;33m¢«                [30;43m¢«                ¢¨[37;40m                             |" << '\n';
-		cout << "|           [33m¢¬[30;43m¢«[1;40m\\[m¢ª[1;47m¢h¢h[;43m        [33;40m¢«                [30;43m¢«                ¢¨[37;40m                               |" << '\n';
+		cout << "|  [1;36m    èµ·         [30m|ï¼¼_[37mï¼â– [;33mâ•±[30;43mâ—¤                â—¢[37;40m                [30;43mâ—¤            [37;40m                     |" << '\n';
+		cout << "|  [1;36mè§€  æ‰‹        [30mï¼   [37m  \ [;33mï¼                 [30;43mâ—¤                â—¢[37;40m                                   |" << '\n';
+		cout << "|  [1;36mæ£‹  ç„¡      [30mï¼  â–  [37mâ–  â–               [;30;43mâ—¤                â—¢[37;40m                                     |" << '\n';
+		cout << "|  [1;36mä¸  å›     [30mï¼     [37m   â”‚               [;30;43mâ—¤                â—¢[37;40m                [33mâ—¢[37m                     |" << '\n';
+		cout << "|  [1;36mèª  å¤§    [30mï¼  [mï¼¼  Ã—  /             [30;43mâ—¤                â—¢[37;40m                [30;43mâ—¤  [37;40m                     |" << '\n';
+		cout << "|  [1;36mçœŸ  ä¸ˆ   [30mã„Ÿ     \ __[;30;43mâ—¤            [33;40mâ—¤                [30;43mâ—¤                â—¢[37;40m                         |" << '\n';
+		cout << "|  [1;36må›  å¤«   [30mâ—¥â—£   â–•[37;43mâ–           [;33mâ—¤                [30;43mâ—¤                â—¢[37;40m                           |" << '\n';
+		cout << "|  [1;36må­        [30m\\â—¥[mâ—£ [1;30mâ–•[37;43mâ–         [;33mâ—¤                [30;43mâ—¤                â—¢[37;40m                             |" << '\n';
+		cout << "|           [33mâ•±[30;43mâ—¤[1;40m\\[mâ—¥[1;47mâ–‡â–‡[;43m        [33;40mâ—¤                [30;43mâ—¤                â—¢[37;40m                               |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
 		cout << "|     ######      #     #       #####      ###     #      ######      ######      ######           |" << '\n';
 		cout << "|     #           #     #         #        #  #    #      #           #           #                |" << '\n';
 		cout << "|     #           #######         #        #   #   #      ####        ######      ####             |" << '\n';
-		//	cout << "|     #           #     #         #        #    #  #      #                #      #                |" << '\n';
-		cout << "|     #           #     #         #        #     # #      #                #      #                |" << '\n';
+		cout << "|     #           #     #         #        #    #  #      #                #      #                |" << '\n';
 		cout << "|     ######      #     #       #####      #     ###      ######      ######      ######           |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
 		cout << "|     ######      #     #       ######      ######       ######                                    |" << '\n';
-		cout << "|     #           #     #       #           #            #             ¶}©l¹CÀ¸                    |" << '\n';
+		cout << "|     #           #     #       #           #            #             é–‹å§‹éŠæˆ²                    |" << '\n';
 		cout << "|     #           #     #       #           #            #                                         |" << '\n';
-		cout << "|     #           #######       #####       ######       ######        Åª¨ú¬ö¿ı                    |" << '\n';
+		cout << "|     #           #######       #####       ######       ######        è®€å–ç´€éŒ„                    |" << '\n';
 		cout << "|     #           #     #       #                #            #                                    |" << '\n';
-		cout << "|     #           #     #       #                #            #        µ²§ô¹CÀ¸                    |" << '\n';
+		cout << "|     #           #     #       #                #            #        çµæŸéŠæˆ²                    |" << '\n';
 		cout << "|     ######      #     #       ######      ######       ######                                    |" << '\n';
 		cout << "|==================================================================================================|" << endl;
 		return true;
 	}
 
-	/* ¹CÀ¸µe­±°ò©³ */
+	/* éŠæˆ²ç•«é¢åŸºåº• */
 	inline bool gameBrand()
 	{
 		system("COLOR 07");
 		system("cls");
 		cout << "====================================================================================================" << '\n';
-		cout << "|                                       |  ¾Ô      ªp      Åã      ¥Ü                              |" << '\n';
+		cout << "|                                       |  æˆ°      æ³      é¡¯      ç¤º                              |" << '\n';
 		cout << "|                                       |==========================================================|" << '\n';
-		cout << "|                                       |  ¨B      ¼Æ  |    " << Cmder::FONT_RED << "¬õ         ¤è    " << Cmder::FONT_WHITE << "|" << (Cmder::FONT_BLACK | Cmder::FONT_LIGHT) << "    ¶Â         ¤è    " << Cmder::FONT_WHITE << "|\n";
+		cout << "|                                       |  æ­¥      æ•¸  |    " << Cmder::FONT_RED << "ç´…         æ–¹    " << Cmder::FONT_WHITE << "|" << (Cmder::FONT_BLACK | Cmder::FONT_LIGHT) << "    é»‘         æ–¹    " << Cmder::FONT_WHITE << "|\n";
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
@@ -425,36 +424,36 @@ namespace System
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " ESC" << Cmder::FONT_WHITE << " : Menu (¥D¿ï³æ)                  Delete : Exit(Â÷¶})|" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " [  " << Cmder::FONT_WHITE << " : Previous Stepundo (¤W¤@¨B)     S : Save(«O¦s)     |" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " ]  " << Cmder::FONT_WHITE << " : Undo (´_­ì)                                       |" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " ¡ö¡ô¡õ¡÷ " << Cmder::FONT_WHITE << " : Move Cursor (²¾°Ê´å¼Ğ)                      |" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " Enter " << Cmder::FONT_WHITE << " : Select (¿ï¾Ü)                                  |" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " ESC" << Cmder::FONT_WHITE << " : Menu (ä¸»é¸å–®)                  Delete : Exit(é›¢é–‹)|" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " [  " << Cmder::FONT_WHITE << " : Previous Stepundo (ä¸Šä¸€æ­¥)     S : Save(ä¿å­˜)     |" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " ]  " << Cmder::FONT_WHITE << " : Undo (å¾©åŸ)                                       |" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " â†â†‘â†“â†’ " << Cmder::FONT_WHITE << " : Move Cursor (ç§»å‹•æ¸¸æ¨™)                      |" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " Enter " << Cmder::FONT_WHITE << " : Select (é¸æ“‡)                                  |" << '\n';
 		cout << "|                                       |                                                          |" << '\n';
 		//      cout << "|                                       |                                                          |" << '\n';
 		cout << "|==================================================================================================|" << endl;
 		return true;
 	}
 
-	/* ESC¥D¿ï³æ°ò©³ */
+	/* ESCä¸»é¸å–®åŸºåº• */
 	inline bool optionBrand()
 	{
 		Cmder::setColor(CLI_FONT_LIGHT | CLI_FONT_WHITE);
 		Cmder::setCursor(29, 8);
 		cout << "================================================ "; Cmder::setCursor(29, 9);
 		cout << "|                                              | "; Cmder::setCursor(29, 10);
-		cout << "|            Exit Menu(Â÷¶}¥D¿ï³æ)             | "; Cmder::setCursor(29, 11);
+		cout << "|            Exit Menu(é›¢é–‹ä¸»é¸å–®)             | "; Cmder::setCursor(29, 11);
 		cout << "|                                              | "; Cmder::setCursor(29, 12);
-		cout << "|            Save(«O¦s)                        | "; Cmder::setCursor(29, 13);
+		cout << "|            Save(ä¿å­˜)                        | "; Cmder::setCursor(29, 13);
 		cout << "|                                              | "; Cmder::setCursor(29, 14);
-		cout << "|            Exit GAME(Â÷¶}¹CÀ¸)               | "; Cmder::setCursor(29, 15);
+		cout << "|            Exit GAME(é›¢é–‹éŠæˆ²)               | "; Cmder::setCursor(29, 15);
 		cout << "|                                              | "; Cmder::setCursor(29, 16);
 		cout << "================================================ ";
 		Cmder::setCursor(39, 14);
 		return true;
 	}
 
-	/* ©I¥s¥D¿ï³æ(¼È©w) */
+	/* å‘¼å«ä¸»é¸å–®(æš«å®š) */
 	inline bool option()
 	{
 		Board b;
@@ -471,16 +470,16 @@ namespace System
 
 
 		/* Menu Option */
-		string menu[] = { "Exit Menu(Â÷¶}¥D¿ï³æ)" , "Save(«O¦s)" , "Exit GAME(Â÷¶}¹CÀ¸)"};
+		string menu[] = { "Exit Menu(é›¢é–‹ä¸»é¸å–®)" , "Save(ä¿å­˜)" , "Exit GAME(é›¢é–‹éŠæˆ²)"};
 		function<bool()> menuOption[] = {
-			[&]() -> bool {		//Â÷¶}¥D¿ï³æ
+			[&]() -> bool {		//é›¢é–‹ä¸»é¸å–®
 				Cmder::setCursor(COORD{0,0});
 				gameBrand();
 				b.print();
 				Cmder::setCursor(_current);
 				return game();
 			},
-			[&]() -> bool {       //«O¦s
+			[&]() -> bool {       //ä¿å­˜
 				Cmder::setCursor(COORD{0,0});
 				boardRecoed.saveLog();
 				gameBrand();
@@ -488,7 +487,7 @@ namespace System
 				Cmder::setCursor(_current);
 				return game();
 			},
-			[]() -> bool {       //Â÷¶}¹CÀ¸
+			[]() -> bool {       //é›¢é–‹éŠæˆ²
 				Cmder::setCursor(COORD{0,0});
 				return false;
 			}
@@ -550,7 +549,7 @@ namespace System
 		}();
 	}
 
-	/* ´ú¸Õ¡A¿é¥X¥Ø«e¦ì¸m */
+	/* æ¸¬è©¦ï¼Œè¼¸å‡ºç›®å‰ä½ç½® */
 	inline bool test(Chess x)
 	{
 		Cmder::setCursor(0, 26);
@@ -559,14 +558,15 @@ namespace System
 
 		Cmder::setColor(CLI_FONT_PURPLE | CLI_FONT_LIGHT);
 
-		cout << (x.getCamp() == 1 ? "¬õ¤è" : x.getCamp() == 0 ? "¶Â¤è" : "    " ) << "   " << x.getName()
+		cout << (x.getCamp() == 1 ? "ç´…æ–¹" : x.getCamp() == 0 ? "é»‘æ–¹" : "    " ) << "   " << x.getName()
 			 << "   Position:{" << x.getPosition().X << "," << x.getPosition().Y << "}   "
-			 << (x.getCamp() == 1 ? "¬õ¤è" : x.getCamp() == 0 ? "¶Â¤è" : "ªÅ") << "   Turn: "
-			 << (Chess::Turn == 1 ? "¬õ¤è" : "¶Â¤è") << "   "
-			 << (Chess::isEnd ? "¤wµ²§ô" : "¥¼µ²§ô") << "\n\n";
-		
+			 << (x.getCamp() == 1 ? "ç´…æ–¹" : x.getCamp() == 0 ? "é»‘æ–¹" : "ç©º") << "   Turn: "
+			 << (Chess::Turn == 1 ? "ç´…æ–¹" : "é»‘æ–¹") << "   "
+			 << (Chess::isEnd ? "å·²çµæŸ" : "æœªçµæŸ") << "\n\n";
+		/*
 		Cmder::setColor(CLI_FONT_CYAN);
 		Chess::PrintTable();
+		*/
 		return true;
 	}
 
@@ -580,37 +580,36 @@ namespace System
 
 /*
 		cout << "====================================================================================================" << '\n';
-		cout << "|      °_         |¢@_¡ş¢j ¢¬¢«               ¢¨                ¢«                                 |" << '\n';
-		cout << "|  Æ[  ¤â        ¡ş     \ ¡ş                ¢«                ¢¨                                   |" << '\n';
-		cout << "|  ´Ñ  µL      ¡ş        ¢j               ¢«                ¢¨                                     |" << '\n';
-		cout << "|  ¤£  ¦^     ¡ş        ¢x              ¢«                ¢¨                ¢¨                     |" << '\n';
-		cout << "|  »y  ¤j    ¡ş  ¢@     /             ¢«                ¢¨                ¢«                       |" << '\n';
-		cout << "|  ¯u  ¤V   £°     \ __¢«           ¢«                ¢«                ¢¨                         |" << '\n';
-		cout << "|  §g  ¤Ò   ¢ª¢©   ¢y¢j           ¢«                ¢«                ¢¨                           |" << '\n';
-		cout << "|  ¤l        \¢ª¢© ¢y¢k         ¢«                ¢«                ¢¨                             |" << '\n';
-		cout << "|           ¢¬¢«\ ¢ª¢h¢h      ¢«                ¢«                ¢¨                               |" << '\n';
+		cout << "|      èµ·         |ï¼¼_ï¼â– â•±â—¤               â—¢                â—¤                                 |" << '\n';
+		cout << "|  è§€  æ‰‹        ï¼     \ ï¼                â—¤                â—¢                                   |" << '\n';
+		cout << "|  æ£‹  ç„¡      ï¼        â–               â—¤                â—¢                                     |" << '\n';
+		cout << "|  ä¸  å›     ï¼        â”‚              â—¤                â—¢                â—¢                     |" << '\n';
+		cout << "|  èª  å¤§    ï¼  ï¼¼     /             â—¤                â—¢                â—¤                       |" << '\n';
+		cout << "|  çœŸ  ä¸ˆ   ã„Ÿ     \ __â—¤           â—¤                â—¤                â—¢                         |" << '\n';
+		cout << "|  å›  å¤«   â—¥â—£   â–•â–           â—¤                â—¤                â—¢                           |" << '\n';
+		cout << "|  å­        \â—¥â—£ â–•â–         â—¤                â—¤                â—¢                             |" << '\n';
+		cout << "|           â•±â—¤\ â—¥â–‡â–‡      â—¤                â—¤                â—¢                               |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
 		cout << "|     ######      #     #       #####      ###     #      ######      ######      ######           |" << '\n';
 		cout << "|     #           #     #         #        #  #    #      #           #           #                |" << '\n';
 		cout << "|     #           #######         #        #   #   #      ####        ######      ####             |" << '\n';
-	//	cout << "|     #           #     #         #        #    #  #      #                #      #                |" << '\n';
-		cout << "|     #           #     #         #        #     # #      #                #      #                |" << '\n';
+		cout << "|     #           #     #         #        #    #  #      #                #      #                |" << '\n';
 		cout << "|     ######      #     #       #####      #     ###      ######      ######      ######           |" << '\n';
 		cout << "|                                                                                                  |" << '\n';
 		cout << "|     ######      #     #       ######      ######       ######                                    |" << '\n';
-		cout << "|     #           #     #       #           #            #             ¶}©l¹CÀ¸                    |" << '\n';
+		cout << "|     #           #     #       #           #            #             é–‹å§‹éŠæˆ²                    |" << '\n';
 		cout << "|     #           #     #       #           #            #                                         |" << '\n';
-		cout << "|     #           #######       #####       ######       ######        Åª¨ú¬ö¿ı                    |" << '\n';
+		cout << "|     #           #######       #####       ######       ######        è®€å–ç´€éŒ„                    |" << '\n';
 		cout << "|     #           #     #       #                #            #                                    |" << '\n';
-		cout << "|     #           #     #       #                #            #        µ²§ô¹CÀ¸                    |" << '\n';
+		cout << "|     #           #     #       #                #            #        çµæŸéŠæˆ²                    |" << '\n';
 		cout << "|     ######      #     #       ######      ######       ######                                    |" << '\n';
 		cout << "|==================================================================================================|" << endl;
-°ò¥»Âi­±
+åŸºæœ¬æª¯é¢
 		cout << "====================================================================================================" << '\n';
-		cout << "|                                       |  ¾Ô      ªp      Åã      ¥Ü                              |" << '\n';
+		cout << "|                                       |  æˆ°      æ³      é¡¯      ç¤º                              |" << '\n';
 		cout << "|                                       |==========================================================|" << '\n';
-		cout << "|                                       |  ¨B      ¼Æ  |    ¬õ         ¤è    |    ¶Â         ¤è    |" << '\n';
+		cout << "|                                       |  æ­¥      æ•¸  |    ç´…         æ–¹    |    é»‘         æ–¹    |" << '\n';
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
@@ -626,11 +625,11 @@ namespace System
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
-		cout << "|                                       |  ESC : Menu (¥D¿ï³æ)                                     |" << '\n';
-		cout << "|                                       |  -   : Previous Stepundo (¤W¤@¨B)                        |" << '\n';
-		cout << "|                                       |  +   : Undo (´_­ì)                                       |" << '\n';
-		cout << "|                                       |  ¡ö¡ô¡õ¡÷  : Move Cursor (²¾°Ê´å¼Ğ)                      |" << '\n';
-		cout << "|                                       |  Enter  : Select (¿ï¾Ü)                                  |" << '\n';
+		cout << "|                                       |  ESC : Menu (ä¸»é¸å–®)                                     |" << '\n';
+		cout << "|                                       |  -   : Previous Stepundo (ä¸Šä¸€æ­¥)                        |" << '\n';
+		cout << "|                                       |  +   : Undo (å¾©åŸ)                                       |" << '\n';
+		cout << "|                                       |  â†â†‘â†“â†’  : Move Cursor (ç§»å‹•æ¸¸æ¨™)                      |" << '\n';
+		cout << "|                                       |  Enter  : Select (é¸æ“‡)                                  |" << '\n';
 		cout << "|                                       |                                                          |" << '\n';
 //      cout << "|                                       |                                                          |" << '\n';
 		cout << "|==================================================================================================|" << endl;
