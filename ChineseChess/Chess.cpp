@@ -297,7 +297,7 @@ bool Chess::ChangeChess(short targetX, short targetY)
 	{
 		for (int i = 0; i <= 10; i++) {
 			for (int j = 0; j <= 9; j++) {
-				if (ChessTable[i][j] % 7 >= 4 || ChessTable[i][j] % 7 == 0) //檢查 車 馬 包 卒
+				if (ChessTable[i][j] % 7 >= 4 || (ChessTable[i][j] % 7 == 0 && ChessTable[i][j] != 0)) //檢查 車 馬 包 卒
 				{
 					x = j;
 					y = i;
