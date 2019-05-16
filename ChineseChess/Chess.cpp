@@ -2,7 +2,10 @@
 #include "Chess.h"
 
 /* Static Variable */
-int Chess::ChessTable[10][9] ={};
+int Chess::ChessTable[10][9] =
+{
+
+};
 
 unsigned int Chess::Turn = 1;//起始方為紅方(代號紅:1 黑:0)
 
@@ -20,7 +23,7 @@ void Chess::PrintTable()
 }
 
 //建構式
-Chess::Chess(short X, short Y, short ID , string Name, bool State , short Camp)
+Chess::Chess(short X, short Y, short ID, string Name, bool State, short Camp)
 {
 	this->x = X;
 	this->y = Y;
@@ -31,7 +34,6 @@ Chess::Chess(short X, short Y, short ID , string Name, bool State , short Camp)
 	this->beChoice = false;
 	Chess::ChessTable[y][x] = this->ID;
 }
-
 Chess::Chess()
 {
 	this->x = -1;
@@ -59,7 +61,7 @@ bool Chess::JudgeMove(short targetX, short targetY)
 		cout << "起始位置沒有棋子";// << endl;
 		return false;
 	}
-		
+
 	//陣營與當前玩家不同
 	if (this->camp != Chess::Turn)
 	{
@@ -68,7 +70,7 @@ bool Chess::JudgeMove(short targetX, short targetY)
 	}
 
 	//目標位置超出棋盤範圍
-	if (targetX < 0 || targetX > 8 ||targetY < 0 || targetY > 9)
+	if (targetX < 0 || targetX > 8 || targetY < 0 || targetY > 9)
 	{
 		cout << "目標位置超出棋盤範圍";// << endl;
 		return false;
@@ -76,7 +78,7 @@ bool Chess::JudgeMove(short targetX, short targetY)
 
 
 	//目標位置與當前玩家同陣營（無法吃棋）
-	if (ChessTable[targetY][targetX] != 0 && (ChessTable[targetY][targetX]-1)/7 == Chess::Turn)
+	if (ChessTable[targetY][targetX] != 0 && (ChessTable[targetY][targetX] - 1) / 7 == Chess::Turn)
 	{
 		cout << "同陣營（無法吃棋）";// << endl;
 		return false;
@@ -123,7 +125,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 		int tmpY = targetY - y;
 
 		if (tmpX * tmpX + tmpY * tmpY == 8 //走田
-			&& ChessTable[y+tmpY/2][x+tmpX/2] == 0) //不踩象眼
+			&& ChessTable[y + tmpY / 2][x + tmpX / 2] == 0) //不踩象眼
 
 			//不過河
 			if ((ID > 7 && targetY > 4) || (ID <= 7 && targetY < 5))
@@ -145,7 +147,7 @@ bool Chess::JudgeChess(short targetX, short targetY)
 		int tmpY = targetY - y;
 
 		if (tmpX * tmpX + tmpY * tmpY == 5 //走日
-			&& ChessTable[(y+tmpY/2)][x+tmpX/2] == 0) //沒有憋馬腳
+			&& ChessTable[(y + tmpY / 2)][x + tmpX / 2] == 0) //沒有憋馬腳
 
 			return true;
 	}
@@ -186,8 +188,6 @@ bool Chess::JudgeChess(short targetX, short targetY)
 			}
 		}
 	}
-
-	cout << "e";// << endl;
 	return false;
 }
 
@@ -235,8 +235,9 @@ int Chess::JudgeBetween(short targetX, short targetY)
 }
 
 //走路
-bool Chess::ChangeChess(short targetX, short targetY)
+COORD Chess::ChangeChess(short targetX, short targetY)
 {
+	Cmder::setCursor(0, 27);
 	Cmder::setColor(CLI_FONT_WHITE);
 	if (JudgeMove(targetX, targetY) && JudgeChess(targetX, targetY))
 	{
@@ -253,22 +254,22 @@ bool Chess::ChangeChess(short targetX, short targetY)
 			ChessTable[targetY][targetX] = 0;
 			state = false; //死棋
 		}
-
+		//紀錄移動差距
+		COORD difference{ x - targetX, y - targetY };
 		//移動
 		ChessTable[targetY][targetX] = ChessTable[y][x];
 		ChessTable[y][x] = 0;
 		x = targetX;
 		y = targetY;
 
-		return true;
+		return difference;
 	}
 	else
 	{
-		cout << "輸入錯誤" << endl;
-		return false;
+		cout << "不合理的移動方式" << endl;
+		return COORD{ 0, 0 };
 	}
 }
-
 int Chess::CheckMate()   //判斷是否將死 與情形
 {
 	int King_posX[2] = { 0 };
@@ -279,12 +280,11 @@ int Chess::CheckMate()   //判斷是否將死 與情形
 			if (ChessTable[i][j] % 7 == 1)
 			{
 				King_posY[count] = i; //King_posY[0] 為將的Y座標  King_posX[1] 為帥的Y座標
- 				King_posX[count] = j; //King_posX[0] 為將的X座標  King_posX[1] 為帥的X座標
+				King_posX[count] = j; //King_posX[0] 為將的X座標  King_posX[1] 為帥的X座標
 				count++;
 			}
 		}
 	}
-
 	if (King_posX[0] == King_posX[1])  //如果在同條線上 檢查是否會王見王
 	{
 		for (int y = King_posY[0] + 1; y < King_posY[1]; y++) {
@@ -293,12 +293,11 @@ int Chess::CheckMate()   //判斷是否將死 與情形
 		}
 		return 1;  //會王見王
 	}
-	
 	else
 	{
 		for (int i = 0; i <= 10; i++) {
 			for (int j = 0; j <= 9; j++) {
-				if (ChessTable[i][j] % 7 >= 4 || (ChessTable[i][j] % 7 == 0 && ChessTable[i][j] != 0)) //檢查 車 馬 包 卒
+				if (ChessTable[i][j] % 7 >= 4 || ChessTable[i][j] % 7 == 0) //檢查 車 馬 包 卒
 				{
 					x = j;
 					y = i;
@@ -307,19 +306,16 @@ int Chess::CheckMate()   //判斷是否將死 與情形
 						return 2;
 					else if (CanMove[King_posY[1]][King_posX[1]])  //下完這步棋 帥可以被對方吃掉 代表被黑方將軍
 						return 3;
-					else
-						return 0;
 				}
 			}
 		}
 	}
 }
-
 void Chess::MovingTip()  //提示所選擇的旗子可走的路線
 {
-	for (int i = 0; i <= 10; i++){
-		for (int j = 0; j <= 9; j++){
-			if (JudgeMove(j, i) && JudgeChess(j, i) )  //尋找可以走的路線
+	for (int i = 0; i <= 10; i++) {
+		for (int j = 0; j <= 9; j++) {
+			if (JudgeMove(j, i) && JudgeChess(j, i))  //尋找可以走的路線
 				CanMove[j][i] = true;
 			else
 				CanMove[j][i] = false;

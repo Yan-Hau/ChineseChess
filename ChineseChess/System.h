@@ -13,8 +13,9 @@ namespace System
 	bool gameBrand();
 	bool optionBrand();
 	bool option();
-	bool test(Chess x);
+	bool info(Chess x);
 	void swap(Chess* t1 , Chess* t2);
+	bool stepBrand();
 	ChessLog boardRecoed;
 
 	/* Stage 1 : Menu */
@@ -179,7 +180,7 @@ namespace System
 		board.print();
 		makeContainer();
 		refreshBoard();
-		
+		stepBrand();
 		/* Listen Keyboard-event */
 		int keypress;
 		board.setPointer(0, 9);
@@ -190,7 +191,7 @@ namespace System
 		return [&]() -> bool {
 			while (true)
 			{
-				test(*current);
+				info(*current);
 				Cmder::setCursor(board.getPointer());
 				keypress = _getch();
 				switch (keypress)
@@ -219,15 +220,12 @@ namespace System
 					}
 					break;
 
-				case 115:   //Key press S
-					boardRecoed.saveLog();
-					break;
-
 				case 91:    //Key press [
 					Cmder::setCursor(0, 26);
 					if (boardRecoed.counter > 1)
 					{
-						boardRecoed.repent();
+						if (boardRecoed.repent())
+							Chess::Turn ^= 1;
 						tempboard = boardRecoed.getCurrentChessTable();
 						for (int i = 0; i < 10; ++i)
 						{
@@ -239,7 +237,8 @@ namespace System
 					}
 					else if (boardRecoed.counter == 1)
 					{
-						boardRecoed.repent();
+						if (boardRecoed.repent())
+							Chess::Turn ^= 1;
 						int initialChessTable[90] =
 						{
 							4,5,3,2,1,2,3,5,4,
@@ -261,14 +260,15 @@ namespace System
 							}
 						}
 					}
-					gameBrand();
 					makeContainer();
 					refreshBoard();
+					stepBrand();
 					break;
 
 				case 93:    //Key press ]
 					Cmder::setCursor(0, 26);
-					boardRecoed.recover();
+					if (boardRecoed.recover())
+						Chess::Turn ^= 1;
 					tempboard = boardRecoed.getCurrentChessTable();
 					for (int i = 0; i < 10; ++i)
 					{
@@ -279,35 +279,41 @@ namespace System
 					}
 					makeContainer();
 					refreshBoard();
+					stepBrand();
 					break;
 
 				case 13:	//Key press Enter
 					COORD pos = board.getCursor(); //光標選取對象
-					
+					COORD _current = Cmder::getCursor();
+					Cmder::setCursor(0, 27);
+					printf("%50c", ' ');
+					Cmder::setCursor(_current);
 					/* 移動 (以選擇，且不可移動至同陣營的棋子子上 ) */
-					if( isSelected && ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn )
+					if (isSelected && ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)
 					{
 						/* 重置選擇狀態 */
 						isSelected = false;
 						current->setCurrent(false);
-						
+
 						/* 移動後，交換回合 */
-						if (current->ChangeChess(pos.X, pos.Y))
+						COORD notation = current->ChangeChess(pos.X, pos.Y);
+						if (notation.X != 0 || notation.Y != 0)
 						{
-							boardRecoed.record(*current->ChessTable, current->Turn);
+							boardRecoed.record(*current->ChessTable, current->Turn, notation, pos);
 							Chess::Turn ^= 1;
 							//swap(current, &ChessTableMap[pos.Y][pos.X]);
 						}
-						
+
 						/* 不管是否移動，刷新畫面 */
-						
+
 						makeContainer();
 						refreshBoard();
+						stepBrand();
 						break;
 					}
 
 					/*未選擇，或是選同陣營的*/
-					else if( (!isSelected || ChessTableMap[pos.Y][pos.X].getCamp() == Chess::Turn) )
+					else if ((!isSelected || ChessTableMap[pos.Y][pos.X].getCamp() == Chess::Turn))
 					{
 						/* 選不同陣營 */
 						if (ChessTableMap[pos.Y][pos.X].getCamp() != Chess::Turn)	break;
@@ -320,62 +326,24 @@ namespace System
 
 							/* 選取目前棋子 */
 							current = &ChessTableMap[pos.Y][pos.X];
-							current->setCurrent( true );
+							current->setCurrent(true);
 							isSelected = true;
 							refreshBoard();
 						}
 					}
-
-					
-					break;
-				
-				case 83:    //Key press Delete
-					return false;
-					break;
-
-				case 33: //Shift + 1
-				case 64: //Shift + 2
-				case 35: //Shift + 3
-				case 36: //Shift + 4
-				case 37: //Shift + 5
-				case 94: //Shift + 6
-				case 38: //Shift + 7
-				case 42: //Shift + 8
-				case 40: //Shift + 9
-					Cmder::setCursor(0, 26);
-					cout << (char)keypress;
-					break;
-
-				case 49:  //Number 1
-				case 50:  //Number 2
-				case 51:  //Number 3
-				case 52:  //Number 4
-				case 53:  //Number 5
-				case 54:  //Number 6
-				case 55:  //Number 7
-				case 56:  //Number 8
-				case 57:  //Number 9
-					Cmder::setCursor(0, 26);
-					cout << (char)keypress;
 					break;
 
 				default:
-					/*
-					Cmder::setCursor(0, 26);
-					printf("%100c", ' ');
-					Cmder::setCursor(0, 26);
-					cout << "Key: " << keypress;
-					*/
 					break;
 				}
 
 				if (Chess::isEnd == true)
 				{
-					return true;
+					Cmder::setCursor(0, 27);
+					cout << (Cmder::FONT_BLACK | Cmder::FONT_LIGHT) << "試用版本已經結束，若想進行接關功能請下載DLC (Please Any Key to Exit)";
+					cin.get();
+					return false;
 				}
-				/* Reset other unselected option color */
-				
-				
 			}
 			
 			return true;
@@ -440,14 +408,46 @@ namespace System
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |              |                     |                     |" << '\n';
 		cout << "|                                       |==============|=====================|=====================|" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " ESC" << Cmder::FONT_WHITE << " : Menu (主選單)                  Delete : Exit(離開)|" << '\n';
-		cout << "|                                       | " << Cmder::FONT_GREEN << " [  " << Cmder::FONT_WHITE << " : Previous Stepundo (上一步)     S : Save(保存)     |" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " ESC" << Cmder::FONT_WHITE << " : Menu (主選單)                  " << Cmder::FONT_GREEN << "       " << Cmder::FONT_WHITE << "            |" << '\n';
+		cout << "|                                       | " << Cmder::FONT_GREEN << " [  " << Cmder::FONT_WHITE << " : Previous Stepundo (上一步)     "<< Cmder::FONT_GREEN << "  " << Cmder::FONT_WHITE <<"                 |" << '\n';
 		cout << "|                                       | " << Cmder::FONT_GREEN << " ]  " << Cmder::FONT_WHITE << " : Undo (復原)                                       |" << '\n';
 		cout << "|                                       | " << Cmder::FONT_GREEN << " ←↑↓→ " << Cmder::FONT_WHITE << " : Move Cursor (移動游標)                      |" << '\n';
 		cout << "|                                       | " << Cmder::FONT_GREEN << " Enter " << Cmder::FONT_WHITE << " : Select (選擇)                                  |" << '\n';
 		cout << "|                                       |                                                          |" << '\n';
 		//      cout << "|                                       |                                                          |" << '\n';
 		cout << "|==================================================================================================|" << endl;
+		return true;
+	}
+	
+	/* 中式記譜法 */
+	bool stepBrand()
+	{
+		COORD _current = Cmder::getCursor();
+		for (int i = 5; i < 18; i++)
+		{
+			Cmder::setCursor(40, i);
+			cout << "|              |                     |                     |";
+		}
+
+		/* counter = 14 */
+		for (int n = (boardRecoed.counter > 26) ? ((boardRecoed.counter+1) / 2 - 12) : 1 , i = 1 ; n <= (boardRecoed.counter + 1) / 2; n++ , i++)
+		{
+			Cmder::setCursor(47, 4 + i);
+			Cmder::setColor(CLI_FONT_WHITE);
+			cout << n;
+			Cmder::setCursor(63, 4 + i);
+
+			Cmder::setColor(CLI_FONT_RED | CLI_FONT_LIGHT);
+			cout << boardRecoed.redNotation[n - 1];
+			if (n * 2 <= boardRecoed.counter)
+			{
+				Cmder::setCursor(86, 4 + i);
+				Cmder::setColor(CLI_FONT_BLACK | CLI_FONT_LIGHT);
+				cout << boardRecoed.blackNotation[n - 1];
+			}
+		}
+		Cmder::setCursor(_current);
+		Cmder::setColor();
 		return true;
 	}
 
@@ -565,11 +565,11 @@ namespace System
 		}();
 	}
 
-	/* 測試，輸出目前位置 */
-	inline bool test(Chess x)
+	/* 輸出目前位置 */
+	inline bool info(Chess x)
 	{
 		Cmder::setCursor(0, 26);
-		printf("%100c", ' ');
+		printf("%60c", ' ');
 		Cmder::setCursor(0, 26);
 
 		//Cmder::setColor(CLI_FONT_PURPLE | CLI_FONT_LIGHT);
@@ -606,8 +606,6 @@ namespace System
 		Cmder::setColor(CLI_FONT_WHITE | CLI_FONT_LIGHT);
 		cout << " :Position:{" << x.getPosition().X + 1 << "," << x.getPosition().Y + 1 << "}   ";
 			 
-			 
-		
 		return true;
 	}
 

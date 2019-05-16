@@ -11,7 +11,7 @@ int main()
 	bool state = true;
 	Cmder box;
 	Board board;
-	box.initialize(40, 100);
+	box.initialize(29, 100);
 	
 	/* Application Entrace Test*/
 	do
